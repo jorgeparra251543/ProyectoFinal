@@ -1,0 +1,15 @@
+DELIMITER $$
+
+CREATE PROCEDURE InsertarConductor(
+    IN p_id INT,
+    IN p_nombre VARCHAR(255),
+    IN p_cedula VARCHAR(20),
+    IN p_telefono VARCHAR(20)
+)
+BEGIN
+    INSERT INTO Conductores (id, nombre, cedula, telefono)
+    VALUES (p_id, p_nombre, p_cedula, p_telefono);
+END $$
+
+
+DELIMITER ;

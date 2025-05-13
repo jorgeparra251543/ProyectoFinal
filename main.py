@@ -1,3 +1,6 @@
+import jwt
+from flask import Flask, request, jsonify
+
 #Improtar clases de otras carpetas del proyecto
 from Entidades import Conductores
 from Entidades import Vehiculos
@@ -14,9 +17,6 @@ from Entidades import Rutas
 from Entidades import Zonas
 from Entidades import Departamento
 
-
-
-
 from Repositorios import ConductoresRepositorio
 from Repositorios import VehiculosRepositorio
 from Repositorios import TipoEnvioRepositorio
@@ -32,7 +32,12 @@ from Repositorios import RutasRepositorio
 from Repositorios import ZonasRepositorio
 from Repositorios import DepartamentoRepositorio
 
+from Utilidades import EncriptarAES
+
+
+
 from datetime import datetime
+
 
 #Definicion metodo Main
 def main():
@@ -93,7 +98,6 @@ def main():
    #Utilizo metodo guardar que me recibe el objeto vehiculo
    #repositorio.Guardar(vehiculo)
 
-
    #Actualizar
    #Creo Objeto vehiculo
    #vehiculo = Vehiculos.Vehiculos(id,placa,tipo,capacidad)
@@ -101,7 +105,6 @@ def main():
    #repositorio = VehiculosRepositorio.VehiculosRepositorio()
    #Utilizo metodo guardar que me recibe el objeto vehiculo
    #repositorio.Actualizar(vehiculo)
-
 
    #Eliminar
    #Creo Objeto vehiculo
@@ -134,7 +137,6 @@ def main():
    #Utilizo metodo guardar que me recibe el objeto envio
    #repositorio.Guardar(tipoenvio)
 
-
    #Actualizar
    #Creo Objeto envio
    #tipoenvio = Tipo_Envio.Tipo_Envio(id,nombre)
@@ -142,7 +144,6 @@ def main():
    #repositorio = TipoEnvioRepositorio.TipoEnvioRepositorio()
    #Utilizo metodo guardar que me recibe el objeto envio
    #repositorio.Actualizar(tipoenvio)
-
 
    #Eliminar
    #Creo Objeto envio
@@ -179,7 +180,6 @@ def main():
    #repositorio = UsuariosRepositorio.UsuariosRepositorio()
    #Utilizo metodo guardar que me recibe el objeto usuario
    #repositorio.Guardar(usuario)
-
 
    #Actualizar
    #Creo Objeto usuario
@@ -452,10 +452,7 @@ def main():
    #Repositorio.Consultar(pedido)
 
 
-
-
 #Rutas
-
    #Inicializacion de datos
    id=4
    ciudad_origen_id=2
@@ -468,18 +465,15 @@ def main():
    #Repositorio.Guardar(ruta)
 
    #Actualizar
-   
    #ruta = Rutas.Ruta(id, ciudad_origen_id, ciudad_destino_id, zona_id)
    #Repositorio = RutasRepositorio.RutasRepositorio()
    #Repositorio.Actualizar(ruta)
-   
 
    #Eliminar
    #ruta = Rutas.Ruta(id, ciudad_origen_id, ciudad_destino_id, zona_id)
    #Repositorio = RutasRepositorio.RutasRepositorio()
    #Repositorio.Eliminar(ruta)
    
-
    #Consultar
    #ruta = Rutas.Ruta(id, ciudad_origen_id, ciudad_destino_id, zona_id)
    #Repositorio = RutasRepositorio.RutasRepositorio()
@@ -497,19 +491,15 @@ def main():
    #Repositorio.Guardar(zona)
 
    #Actualizar
-   
    #zona = Zonas.Zona(id, nombre)
    #Repositorio = ZonasRepositorio.ZonasRepositorio()
    #Repositorio.Actualizar(zona)
-  
-   
 
    #Eliminar
    #zona = Zonas.Zona(id, nombre)
    #Repositorio = ZonasRepositorio.ZonasRepositorio()
    #Repositorio.Eliminar(zona)
    
-
    #Consultar
    #zona = Zonas.Zona(id, nombre)
    #Repositorio = ZonasRepositorio.ZonasRepositorio()
@@ -528,23 +518,86 @@ def main():
    #Repositorio.Guardar(departamento)
 
    #Actualizar
-   
    #departamento = Departamento.Departamento(id, nombre)
    #Repositorio = DepartamentoRepositorio.DepartamentosRepositorio()
    #Repositorio.Actualizar(departamento)
-
 
    #Eliminar
    #departamento = Departamento.Departamento(id, nombre)
    #Repositorio = DepartamentoRepositorio.DepartamentosRepositorio()
    #Repositorio.Eliminar(departamento)
 
-   
    #Consultar
    #departamento = Departamento.Departamento(id, nombre)
    #Repositorio = DepartamentoRepositorio.DepartamentosRepositorio()
    #Repositorio.Consultar(departamento)
   
+#Mejoras Proyecto Final
+
+   #--CONDUCTOR
+   #Inicializacion de datos
+   #id=80
+   #nombre="Jorge luis parra"
+   #cedula="1003"
+   #telefono="301378973"
+
+   #Insertar
+   #Creo Objeto conductor
+   #conductor = Conductores.Conductores(id,nombre,cedula,telefono)
+
+   #Creo el objeto para encriptar y desencriptar
+   #ObjAES=EncriptarAES.EncriptarAES()
+
+
+   #conductor.setCedula(ObjAES.Cifrar(conductor.getCedula()))
+   #conductor.setTelefono(ObjAES.Cifrar(conductor.getTelefono()))
+
+
+   #Creo objeto de repositorio conductores 
+   #repositorio = ConductoresRepositorio.ConductoresRepositorio()
+
+   #Utilizo metodo guardar que me recibe el objeto conductor
+   #repositorio.Guardar(conductor)
+
+#TOKEN 
+
+app = Flask(__name__)
+@app.route('/conductor/guardar', methods=["POST"])
+def guardar_conductor():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if not all(dato in datos for dato in ("id", "nombre", "cedula", "telefono")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto conductor
+        conductor = Conductores.Conductores(datos["id"],datos["nombre"],datos["cedula"],datos["telefono"])
+
+        #Creo el objeto para encriptar y desencriptar
+        ObjAES=EncriptarAES.EncriptarAES()
+
+        #Creo objeto para insertar conductor
+        repositorio = ConductoresRepositorio.ConductoresRepositorio()
+
+        #Encripto los datos sensibles del conductor
+        conductor.setCedula(ObjAES.Cifrar(conductor.getCedula()))
+        conductor.setTelefono(ObjAES.Cifrar(conductor.getTelefono()))
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Guardar(conductor)
+
+        respuesta["Mensaje"] = "Conductor guardado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+
 #Llamado metodo Main
 if __name__ == "__main__":#
-    main()
+    app.run('localhost', 4041);
