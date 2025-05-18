@@ -532,38 +532,10 @@ def main():
    #Repositorio = DepartamentoRepositorio.DepartamentosRepositorio()
    #Repositorio.Consultar(departamento)
   
-#Mejoras Proyecto Final
-
-   #--CONDUCTOR
-   #Inicializacion de datos
-   #id=80
-   #nombre="Jorge luis parra"
-   #cedula="1003"
-   #telefono="301378973"
-
-   #Insertar
-   #Creo Objeto conductor
-   #conductor = Conductores.Conductores(id,nombre,cedula,telefono)
-
-   #Creo el objeto para encriptar y desencriptar
-   #ObjAES=EncriptarAES.EncriptarAES()
-
-
-   #conductor.setCedula(ObjAES.Cifrar(conductor.getCedula()))
-   #conductor.setTelefono(ObjAES.Cifrar(conductor.getTelefono()))
-
-
-   #Creo objeto de repositorio conductores 
-   #repositorio = ConductoresRepositorio.ConductoresRepositorio()
-
-   #Utilizo metodo guardar que me recibe el objeto conductor
-   #repositorio.Guardar(conductor)
-
-#TOKEN 
 
 app = Flask(__name__)
 @app.route('/conductor/guardar', methods=["POST"])
-def guardar_conductor():
+def GuardarConductor():
     
     respuesta = {}
 
@@ -580,12 +552,14 @@ def guardar_conductor():
         #Creo el objeto para encriptar y desencriptar
         ObjAES=EncriptarAES.EncriptarAES()
 
-        #Creo objeto para insertar conductor
+        #Creo objeto para conductor
         repositorio = ConductoresRepositorio.ConductoresRepositorio()
 
         #Encripto los datos sensibles del conductor
         conductor.setCedula(ObjAES.Cifrar(conductor.getCedula()))
         conductor.setTelefono(ObjAES.Cifrar(conductor.getTelefono()))
+
+        print(conductor.getCedula())
 
         # Guardar en la base de datos usando el repositorio
         repositorio.Guardar(conductor)
@@ -596,7 +570,98 @@ def guardar_conductor():
     except Exception as e:
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
+    
+@app.route('/conductor/actualizar', methods=["POST"])
+def ActualizarConductor():
+    
+    respuesta = {}
 
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if not all(dato in datos for dato in ("id","nombre", "cedula", "telefono")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto conductor
+        conductor = Conductores.Conductores(datos["id"],datos["nombre"],datos["cedula"],datos["telefono"])
+
+        #Creo el objeto para encriptar y desencriptar
+        ObjAES=EncriptarAES.EncriptarAES()
+
+        #Creo objeto para conductor
+        repositorio = ConductoresRepositorio.ConductoresRepositorio()
+
+        #Encripto los datos sensibles del conductor
+        conductor.setCedula(ObjAES.Cifrar(conductor.getCedula()))
+        conductor.setTelefono(ObjAES.Cifrar(conductor.getTelefono()))
+
+        # Actualizar en la base de datos usando el repositorio
+        repositorio.Actualizar(conductor)
+
+        respuesta["Mensaje"] = "Conductor Actualizado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+
+@app.route('/conductor/consultar', methods=["POST"])
+def ConsultarConductor():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto conductor
+        conductor = Conductores.Conductores(datos["id"],"","","")
+
+        #Creo objeto para insertar conductor
+        repositorio = ConductoresRepositorio.ConductoresRepositorio()
+
+        # Consultar en la base de datos usando el repositorio
+        repositorio.Consultar(conductor)
+
+        respuesta["Mensaje"] = "Conductor Consultado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/conductor/eliminar', methods=["POST"])
+def EliminarConductor():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto conductor
+        conductor = Conductores.Conductores(datos["id"],"","","")
+
+        #Creo objeto para insertar conductor
+        repositorio = ConductoresRepositorio.ConductoresRepositorio()
+
+        # Consultar en la base de datos usando el repositorio
+        repositorio.Eliminar(conductor)
+
+        respuesta["Mensaje"] = "Conductor Eliminado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
 
 #Llamado metodo Main
 if __name__ == "__main__":#

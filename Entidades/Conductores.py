@@ -8,7 +8,7 @@ class Conductores:
         self.setNombre(nombre)
         self.setCedula(cedula)
         self.setTelefono(telefono)
-    
+
     #Metodos Get y Set para acceder a los atributos
 
     def getId(self):
@@ -24,7 +24,7 @@ class Conductores:
         return self.__nombre
 
     def setNombre(self, nombre):
-        if isinstance(nombre, str) and nombre.strip():
+        if isinstance(nombre, str):
             self.__nombre = nombre
         else:
             raise ValueError("Nombre no válido")
@@ -33,7 +33,7 @@ class Conductores:
         return self.__cedula
 
     def setCedula(self, cedula):
-        if isinstance(cedula, str) and cedula.strip():
+        if isinstance(cedula, str):
             self.__cedula = cedula
         else:
             raise ValueError("Cédula no válida")
@@ -42,7 +42,7 @@ class Conductores:
         return self.__telefono
 
     def setTelefono(self, telefono):
-        if isinstance(telefono, str) and telefono.strip():
+        if isinstance(telefono, str):
             self.__telefono = telefono
         else:
             raise ValueError("Telefono no valido")

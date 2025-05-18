@@ -1,0 +1,25 @@
+CONSULTAS POR CMD PC
+
+INSERT
+curl -X POST http://localhost:4041/conductor/guardar -H "Content-Type: application/json" -d "{\"id\":50,\"nombre\":\"Jorge Luis Parra\",\"cedula\":\"1003\",\"telefono\":\"301378973\"}"
+
+UPDATE
+curl -X POST http://localhost:4041/conductor/actualizar -H "Content-Type: application/json" -d "{\"id\":50,\"nombre\":\"Luisa sanchez\",\"cedula\":\"1903\",\"telefono\":\"301378973\"}"
+
+SELECT
+curl -X POST http://localhost:4041/conductor/consultar -H "Content-Type: application/json" -d "{\"id\":50}"
+
+DELETE 
+curl -X POST http://localhost:4041/conductor/eliminar -H "Content-Type: application/json" -d "{\"id\":50}"
+
+
+
+
+
+
+
+
+
+
+
+

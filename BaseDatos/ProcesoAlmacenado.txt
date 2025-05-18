@@ -1,14 +1,24 @@
 DELIMITER $$
 
-CREATE PROCEDURE InsertarConductor(
-    IN p_id INT,
-    IN p_nombre VARCHAR(255),
-    IN p_cedula VARCHAR(20),
-    IN p_telefono VARCHAR(20)
-)
+CREATE PROCEDURE InsertarConductor(IN p_id INT,IN p_nombre VARCHAR(255),IN p_cedula VARCHAR(512),IN p_telefono VARCHAR(512))
 BEGIN
-    INSERT INTO Conductores (id, nombre, cedula, telefono)
-    VALUES (p_id, p_nombre, p_cedula, p_telefono);
+    INSERT INTO Conductores (id, nombre, cedula, telefono) VALUES (p_id, p_nombre, p_cedula, p_telefono);
+END $$
+
+
+CREATE PROCEDURE ActualizarConductor(IN p_id INT,IN p_nombre VARCHAR(255),IN p_cedula VARCHAR(512),IN p_telefono VARCHAR(512))
+BEGIN
+    UPDATE Conductores SET nombre = p_nombre,cedula = p_cedula,telefono = p_telefono WHERE id = p_id;
+END $$
+
+CREATE PROCEDURE ConsultarConductorPorId(IN p_id INT)
+BEGIN
+    SELECT id, nombre, cedula, telefono FROM Conductores WHERE id = p_id;
+END $$
+
+CREATE PROCEDURE EliminarConductorPorId(IN p_id INT)
+BEGIN
+    DELETE FROM Conductores WHERE id = p_id;
 END $$
 
 

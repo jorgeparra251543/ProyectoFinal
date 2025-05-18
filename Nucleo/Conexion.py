@@ -29,7 +29,7 @@ class Conexion:
 
     #Operacion que devuelve tabla (Consulta)
     def ejecutarQuery(self,consultaSQL):
-        tabla=self.__ObjCursor.execute(consultaSQL); #Ejecuto consulta
-        self.__ObjCursor.commit(); #Guardo en BD
+        self.__ObjCursor.execute(consultaSQL); #Ejecuto consulta
+        tabla= self.__ObjCursor.fetchall()  # Esto asegura que se lean los resultados de la consulta   
         return tabla;
 

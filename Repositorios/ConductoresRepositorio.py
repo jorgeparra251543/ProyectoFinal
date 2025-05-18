@@ -2,6 +2,9 @@
 from Nucleo import Conexion
 from tabulate import tabulate
 
+from Entidades import Conductores;
+from Utilidades import EncriptarAES;
+
 #Cada entidad es una clase
 class ConductoresRepositorio:
 
@@ -20,33 +23,52 @@ class ConductoresRepositorio:
 		
     #Actualizar conductor     
     def Actualizar(self, conductor):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""UPDATE Conductores SET nombre='{conductor.getNombre()}',cedula='{conductor.getCedula()}',telefono='{conductor.getTelefono()}' Where id= {conductor.getId()}"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Actualizado")
-        return True
+        try:
+           ObjConexion = Conexion.Conexion()
+           ObjConexion.conectar()
+           consulta = f"CALL ActualizarConductor({conductor.getId()}, '{conductor.getNombre()}', '{conductor.getCedula()}', '{conductor.getTelefono()}');"
+           ObjConexion.ejecutarNoQuery(consulta)
+           ObjConexion.desconectar()
+           print("Dato Actualizado")
+           return True
+        except Exception as ex:
+            print(str(ex));
     
     #Eliminar conductor     
     def Eliminar(self, conductor):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""DELETE FROM Conductores  WHERE id={conductor.getId()}"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Eliminado")
-        return True
+        try:
+           ObjConexion = Conexion.Conexion()
+           ObjConexion.conectar()
+           consulta = f"CALL EliminarConductorPorId({conductor.getId()})"
+           ObjConexion.ejecutarNoQuery(consulta)
+           ObjConexion.desconectar()
+           print("Dato Eliminado")
+           return True
+        except Exception as ex:
+            print(str(ex));
     
-    #Consultar conductor     
     def Consultar(self, conductor):
+        try:
+           ObjConexion = Conexion.Conexion()
+           ObjConexion.conectar()
+           consulta = f"CALL ConsultarConductorPorId({conductor.getId()})"
+           tabla = ObjConexion.ejecutarQuery(consulta)
 
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""SELECT * FROM Conductores  WHERE id={conductor.getId()}"""
-        tabla=ObjConexion.ejecutarQuery(consulta)
-        print("Dato Consultado")
-        print(tabulate(tabla, headers=["ID","Nombre","Cedula","Telefono",], tablefmt="grid"))
-        ObjConexion.desconectar()
-        return True
-    
+           if not tabla:
+               print("No se encontraro conductor")
+               ObjConexion.desconectar()
+
+           ObjAES=EncriptarAES.EncriptarAES()
+
+           for elemento in tabla:
+               id = elemento[0]
+               nombre = elemento[1]
+               cedula = ObjAES.Decifrar(elemento[2])  # Desencriptamos la cedula
+               telefono = ObjAES.Decifrar(elemento[3])  # Desencriptamos el telefono
+               print(f"ID: {id}, Nombre: {nombre}, Cédula: {cedula}, Teléfono: {telefono}")
+        
+           ObjConexion.desconectar()
+           return True
+        except Exception as ex:
+          print(str(ex))
+
