@@ -1,5 +1,6 @@
 import jwt
 from flask import Flask, request, jsonify
+from functools import wraps
 
 #Improtar clases de otras carpetas del proyecto
 from Entidades import Conductores
@@ -31,12 +32,9 @@ from Repositorios import PedidosRepositorio
 from Repositorios import RutasRepositorio
 from Repositorios import ZonasRepositorio
 from Repositorios import DepartamentoRepositorio
-
 from Utilidades import EncriptarAES
-
-
-
 from datetime import datetime
+from Seguridad.JWT import SeguridadJWT as JWT
 
 
 #Definicion metodo Main
@@ -532,9 +530,53 @@ def main():
    #Repositorio = DepartamentoRepositorio.DepartamentosRepositorio()
    #Repositorio.Consultar(departamento)
   
+# Decorador para proteger los endpoints que necesitan autenticación
+def token_requerido(f):
+    @wraps(f)  # Aseguramos que la función mantenga su nombre original
+    def decorador(*args, **kwargs):
+        token = None  # Inicializamos la variable token con None
+
+        # Revisamos si en las cabeceras de la solicitud hay un token
+        if 'Authorization' in request.headers:
+            # Extraemos el token, que está en el formato 'Bearer <token>'
+            token = request.headers['Authorization'].split(" ")[1]  # Tomamos la parte después de "Bearer"
+        
+        if not token:  # Si no hay token, devolvemos un error
+            return jsonify({'mensaje': 'Token faltante'}), 401
+        
+        try:
+            # Verificamos si el token es válido
+            JWT.verificar_token(token)
+        except Exception as e:
+            # Si el token es inválido o expiró, retornamos un error
+            return jsonify({'mensaje': str(e)}), 401
+        
+        # Si el token es válido, ejecutamos la función original
+        return f(*args, **kwargs)
+    
+    return decorador  # Retornamos el decorador
 
 app = Flask(__name__)
+
+@app.route('/loginJWT', methods=['POST'])  # Definimos la ruta para el loginJWT
+def login():
+    data = request.get_json()  # Obtenemos los datos enviados en el cuerpo de la solicitud (login)
+    
+    # Extraemos el usuario y la contraseña del cuerpo de la solicitud
+    usuario = data.get("usuario")
+    password = data.get("password")
+
+    # Verificamos las credenciales (en este caso, las credenciales están codificadas, en un caso real deberíamos validarlas con una base de datos)
+    if usuario == "admin" and password == "admin123":
+        # Si las credenciales son correctas, generamos el token
+        token = JWT.generar_token(usuario)
+        return jsonify({"token": token})  # Retornamos el token al usuario
+    else:
+        # Si las credenciales son incorrectas, retornamos un error
+        return jsonify({"mensaje": "Credenciales incorrectas"}), 401
+
 @app.route('/conductor/guardar', methods=["POST"])
+@token_requerido
 def GuardarConductor():
     
     respuesta = {}
@@ -559,8 +601,6 @@ def GuardarConductor():
         conductor.setCedula(ObjAES.Cifrar(conductor.getCedula()))
         conductor.setTelefono(ObjAES.Cifrar(conductor.getTelefono()))
 
-        print(conductor.getCedula())
-
         # Guardar en la base de datos usando el repositorio
         repositorio.Guardar(conductor)
 
@@ -572,6 +612,7 @@ def GuardarConductor():
         return jsonify(respuesta), 500
     
 @app.route('/conductor/actualizar', methods=["POST"])
+@token_requerido
 def ActualizarConductor():
     
     respuesta = {}
@@ -606,8 +647,8 @@ def ActualizarConductor():
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
     
-
 @app.route('/conductor/consultar', methods=["POST"])
+@token_requerido
 def ConsultarConductor():
     
     respuesta = {}
@@ -636,6 +677,7 @@ def ConsultarConductor():
         return jsonify(respuesta), 500
     
 @app.route('/conductor/eliminar', methods=["POST"])
+@token_requerido
 def EliminarConductor():
     
     respuesta = {}
