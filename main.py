@@ -956,7 +956,6 @@ def EliminarTipoEnvio():
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
 
-
 #API INCIDENCIAS
 
 @app.route('/incidencia/guardar', methods=["POST"])
@@ -1069,6 +1068,37 @@ def EliminarIncidencia():
         repositorio.Eliminar(incidencia)
 
         respuesta["Mensaje"] = "Incidencia eliminada correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+#API USUARIOS
+
+@app.route('/usuarios/guardar', methods=["POST"])
+#@token_requerido
+def GuardarUsuario():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if not all(dato in datos for dato in ("id","nombre","email","telefono","direccion","rol","fecha_registro")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto tipo usuario
+        usuario = Usuarios.Usuarios(datos["id"],datos["nombre"],datos["email"],datos["telefono"],datos["direccion"],datos["rol"],datos["fecha_registro"])
+
+        #Creo objeto para tipo usuario
+        repositorio =  UsuariosRepositorio.UsuariosRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Guardar(usuario)
+
+        respuesta["Mensaje"] = "Usuario guardado correctamente"
         return jsonify(respuesta), 201
 
     except Exception as e:
