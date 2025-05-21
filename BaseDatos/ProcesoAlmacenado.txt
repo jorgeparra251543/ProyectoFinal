@@ -44,6 +44,27 @@ END $$
 
 -------------------------------------------------------------------------------
 
+CREATE PROCEDURE InsertarTipoEnvio(IN p_id INT,IN p_nombre VARCHAR(50))
+BEGIN
+    INSERT INTO tipo_envio (id, nombre) VALUES (p_id, p_nombre);
+END $$
+
+CREATE PROCEDURE ActualizarTipoEnvio(IN p_id INT,IN p_nombre VARCHAR(50))
+BEGIN
+    UPDATE tipo_envio SET nombre = p_nombre WHERE id = p_id;
+END $$
+
+CREATE PROCEDURE ConsultarTipoEnvioPorId(IN p_id INT)
+BEGIN
+    SELECT id, nombre FROM tipo_envio WHERE id = p_id;
+END $$
+
+CREATE PROCEDURE EliminarTipoEnvioPorId(IN p_id INT)
+BEGIN
+    DELETE FROM tipo_envio WHERE id = p_id;
+END $$
+
+-----------------------------------------------------------------------------------
 
 
 

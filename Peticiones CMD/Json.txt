@@ -3,6 +3,7 @@ CONSULTAS POR CMD PC
 TOKEN
 curl -X POST http://localhost:4041/loginJWT -H "Content-Type: application/json" -d "{\"usuario\":\"admin\",\"password\":\"admin123\"}"
 
+
 ----------CONDUCTORES
 
 INSERT
@@ -17,7 +18,6 @@ curl -X POST http://localhost:4041/conductor/consultar -H "Content-Type: applica
 DELETE 
 curl -X POST http://localhost:4041/conductor/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
 
-
 ----------VEHICULOS
 
 INSERT
@@ -31,6 +31,24 @@ curl -X POST http://localhost:4041/vehiculo/consultar -H "Content-Type: applicat
 
 DELETE 
 curl -X POST http://localhost:4041/vehiculo/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
+
+----------TIPO ENVIO
+
+INSERT
+curl -X POST http://localhost:4041/tipoenvio/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"nombre\":\"Nacional\"}"
+
+UPDATE
+curl -X POST http://localhost:4041/tipoenvio/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"nombre\":\"Seguro\"}"
+
+SELECT
+curl -X POST http://localhost:4041/tipoenvio/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
+
+DELETE 
+curl -X POST http://localhost:4041/tipoenvio/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
+
+
+
+
 
 
 

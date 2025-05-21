@@ -7,42 +7,61 @@ class TipoEnvioRepositorio:
 
     #Insertar tipo envio    
     def Guardar(self, envio):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""INSERT INTO tipo_envio (id,nombre) VALUES ({envio.getId()},'{envio.getNombre()}')"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Insertado")
-        return True
+        try: 
+           ObjConexion = Conexion.Conexion()
+           ObjConexion.conectar()
+           consulta = f"CALL InsertarTipoEnvio({envio.getId()},'{envio.getNombre()}');"
+           ObjConexion.ejecutarNoQuery(consulta)
+           ObjConexion.desconectar()
+           print("Dato Insertado")
+           return True
+        except Exception as ex:
+            print(str(ex));
     
     #Actualizar tipo envio   
     def Actualizar(self, envio):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""UPDATE tipo_envio SET nombre='{envio.getNombre()}' Where id= {envio.getId()}"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Actualizado")
-        return True
+        try:
+           ObjConexion = Conexion.Conexion()
+           ObjConexion.conectar()
+           consulta = f"CALL ActualizarTipoEnvio({envio.getId()},'{envio.getNombre()}');"
+           ObjConexion.ejecutarNoQuery(consulta)
+           ObjConexion.desconectar()
+           print("Dato Actualizado")
+           return True
+        except Exception as ex:
+            print(str(ex));
     
     #Eliminar tipo envio
     def Eliminar(self, envio):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""DELETE FROM tipo_envio  WHERE id={envio.getId()}"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Eliminado")
-        return True
+        try:
+           ObjConexion = Conexion.Conexion()
+           ObjConexion.conectar()
+           consulta = f"CALL EliminarTipoEnvioPorId({envio.getId()});"
+           ObjConexion.ejecutarNoQuery(consulta)
+           ObjConexion.desconectar()
+           print("Dato Eliminado")
+           return True
+        except Exception as ex:
+            print(str(ex));
     
     #Consultar tipo envio 
     def Consultar(self, envio):
+        try:
+           ObjConexion = Conexion.Conexion()
+           ObjConexion.conectar()
+           consulta = f"CALL ConsultarTipoEnvioPorId({envio.getId()});"
+           tabla=ObjConexion.ejecutarQuery(consulta)
 
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""SELECT * FROM tipo_envio WHERE id={envio.getId()}"""
-        tabla=ObjConexion.ejecutarQuery(consulta)
-        print("Dato Consultado")
-        print(tabulate(tabla, headers=["ID","Nombre"], tablefmt="grid"))
-        ObjConexion.desconectar()
-        return True
+           if not tabla:
+               print("No se encontraro conductor")
+               ObjConexion.desconectar()
+
+           for elemento in tabla:
+               id = elemento[0]
+               nombre = elemento[1]
+               print(f"ID: {id}, Nombre: {nombre}")
+
+           ObjConexion.desconectar()
+           return True
+        except Exception as ex:
+            print(str(ex));

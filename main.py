@@ -708,7 +708,6 @@ def EliminarConductor():
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
 
-
 #API VEHICULO
 
 @app.route('/vehiculo/guardar', methods=["POST"])
@@ -782,7 +781,7 @@ def ActualizarVehiculo():
         return jsonify(respuesta), 500
 
 @app.route('/vehiculo/consultar', methods=["POST"])
-#@token_requerido
+@token_requerido
 def ConsultarVehiculo():
     
     respuesta = {}
@@ -811,7 +810,7 @@ def ConsultarVehiculo():
         return jsonify(respuesta), 500
 
 @app.route('/vehiculo/eliminar', methods=["POST"])
-#@token_requerido
+@token_requerido
 def EliminarVehiculo():
     
     respuesta = {}
@@ -838,6 +837,130 @@ def EliminarVehiculo():
     except Exception as e:
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
+
+#API TIPO ENVIO
+
+@app.route('/tipoenvio/guardar', methods=["POST"])
+#@token_requerido
+def GuardarTipoEnvio():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if not all(dato in datos for dato in ("id", "nombre")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto tipo envio
+        tipoEnvio = Tipo_Envio.Tipo_Envio(datos["id"],datos["nombre"])
+
+        #Creo objeto para tipo envio
+        repositorio =  TipoEnvioRepositorio.TipoEnvioRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Guardar(tipoEnvio)
+
+        respuesta["Mensaje"] = "Tipo Envio guardado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/tipoenvio/actualizar', methods=["POST"])
+#@token_requerido
+def ActualizarTipoEnvio():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar la actualizacion
+        if not all(dato in datos for dato in ("id", "nombre")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto tipo envio
+        tipoEnvio = Tipo_Envio.Tipo_Envio(datos["id"],datos["nombre"])
+
+        #Creo objeto para tipo envio
+        repositorio =  TipoEnvioRepositorio.TipoEnvioRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Actualizar(tipoEnvio)
+
+        respuesta["Mensaje"] = "Tipo Envio Actualizado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/tipoenvio/consultar', methods=["POST"])
+#@token_requerido
+def ConsultarTipoEnvio():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar la consulta
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto tipo envio
+        tipoEnvio = Tipo_Envio.Tipo_Envio(datos["id"]," ")
+
+        #Creo objeto para tipo envio
+        repositorio =  TipoEnvioRepositorio.TipoEnvioRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Consultar(tipoEnvio)
+
+        respuesta["Mensaje"] = "Tipo Envio consultado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/tipoenvio/eliminar', methods=["POST"])
+#@token_requerido
+def EliminarTipoEnvio():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el eleminar
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto tipo envio
+        tipoEnvio = Tipo_Envio.Tipo_Envio(datos["id"]," ")
+
+        #Creo objeto para tipo envio
+        repositorio =  TipoEnvioRepositorio.TipoEnvioRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Eliminar(tipoEnvio)
+
+        respuesta["Mensaje"] = "Tipo Envio eliminado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+
+
+
+
+
 
 #Llamado metodo Main
 if __name__ == "__main__":#
