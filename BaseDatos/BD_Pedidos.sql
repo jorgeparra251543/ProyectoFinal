@@ -290,7 +290,7 @@ INSERT INTO `usuarios` (`id`, `nombre`, `email`, `telefono`, `direccion`, `rol`,
 
 CREATE TABLE `vehiculos` (
   `id` int(11) NOT NULL,
-  `placa` varchar(20) NOT NULL,
+  `placa` varchar(512) NOT NULL,
   `tipo` varchar(50) DEFAULT NULL,
   `capacidad` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

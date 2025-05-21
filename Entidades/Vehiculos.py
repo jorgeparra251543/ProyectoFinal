@@ -24,7 +24,7 @@ class Vehiculos:
         return self.__placa
 
     def setPlaca(self, placa):
-        if isinstance(placa, str) and placa.strip():
+        if isinstance(placa, str):
             self.__placa = placa
         else:
             raise ValueError("Placa no válido")
@@ -33,7 +33,7 @@ class Vehiculos:
         return self.__tipo
 
     def setTipo(self, tipo):
-        if isinstance(tipo, str) and tipo.strip():
+        if isinstance(tipo, str):
             self.__tipo = tipo
         else:
             raise ValueError("Tipo no válido")
@@ -45,4 +45,4 @@ class Vehiculos:
         if isinstance(capacidad, int):
             self.__capacidad = capacidad
         else:
-            raise ValueError("Vehiculo no valido")
+            raise ValueError("Capacidad no valido")

@@ -575,6 +575,9 @@ def login():
         # Si las credenciales son incorrectas, retornamos un error
         return jsonify({"mensaje": "Credenciales incorrectas"}), 401
 
+
+#API CONDUCTOR
+
 @app.route('/conductor/guardar', methods=["POST"])
 @token_requerido
 def GuardarConductor():
@@ -699,6 +702,137 @@ def EliminarConductor():
         repositorio.Eliminar(conductor)
 
         respuesta["Mensaje"] = "Conductor Eliminado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+
+#API VEHICULO
+
+@app.route('/vehiculo/guardar', methods=["POST"])
+#@token_requerido
+def GuardarVehiculo():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if not all(dato in datos for dato in ("id", "placa", "tipo", "capacidad")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto vehiculo
+        vehiculo = Vehiculos.Vehiculos(datos["id"],datos["placa"],datos["tipo"],datos["capacidad"])
+
+        #Creo el objeto para encriptar y desencriptar
+        ObjAES=EncriptarAES.EncriptarAES()
+
+        #Creo objeto para vehiculo
+        repositorio = VehiculosRepositorio.VehiculosRepositorio()
+
+        #Encripto los datos sensibles del vehiculo
+        vehiculo.setPlaca(ObjAES.Cifrar(vehiculo.getPlaca()))
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Guardar(vehiculo)
+
+        respuesta["Mensaje"] = "Vehiculo guardado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/vehiculo/actualizar', methods=["POST"])
+#@token_requerido
+def ActualizarVehiculo():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el update
+        if not all(dato in datos for dato in ("id", "placa", "tipo", "capacidad")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+        
+        # Crear objeto vehiculo
+        vehiculo = Vehiculos.Vehiculos(datos["id"],datos["placa"],datos["tipo"],datos["capacidad"])
+
+        #Creo el objeto para encriptar y desencriptar
+        ObjAES=EncriptarAES.EncriptarAES()
+
+        #Creo objeto para vehiculo
+        repositorio = VehiculosRepositorio.VehiculosRepositorio()
+
+        #Encripto los datos sensibles del vehiculo
+        vehiculo.setPlaca(ObjAES.Cifrar(vehiculo.getPlaca()))
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Actualizar(vehiculo)
+
+        respuesta["Mensaje"] = "Vehiculo Actualizado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/vehiculo/consultar', methods=["POST"])
+#@token_requerido
+def ConsultarVehiculo():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar la consulta
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto vehiculo
+        vehiculo = Vehiculos.Vehiculos(datos["id"],"","",0)
+
+        #Creo objeto para consultar vehiculo
+        repositorio = VehiculosRepositorio.VehiculosRepositorio()
+
+        # Consultar en la base de datos usando el repositorio
+        repositorio.Consultar(vehiculo)
+
+        respuesta["Mensaje"] = "Vehiculo Consultado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/vehiculo/eliminar', methods=["POST"])
+#@token_requerido
+def EliminarVehiculo():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el delete
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto vehiculo
+        vehiculo = Vehiculos.Vehiculos(datos["id"],"","",0)
+
+        #Creo objeto para consultar vehiculo
+        repositorio = VehiculosRepositorio.VehiculosRepositorio()
+
+        # Consultar en la base de datos usando el repositorio
+        repositorio.Eliminar(vehiculo)
+
+        respuesta["Mensaje"] = "Vehiculo Eliminado correctamente"
         return jsonify(respuesta), 201
 
     except Exception as e:

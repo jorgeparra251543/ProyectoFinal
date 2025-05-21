@@ -5,7 +5,6 @@ BEGIN
     INSERT INTO Conductores (id, nombre, cedula, telefono) VALUES (p_id, p_nombre, p_cedula, p_telefono);
 END $$
 
-
 CREATE PROCEDURE ActualizarConductor(IN p_id INT,IN p_nombre VARCHAR(255),IN p_cedula VARCHAR(512),IN p_telefono VARCHAR(512))
 BEGIN
     UPDATE Conductores SET nombre = p_nombre,cedula = p_cedula,telefono = p_telefono WHERE id = p_id;
@@ -20,6 +19,38 @@ CREATE PROCEDURE EliminarConductorPorId(IN p_id INT)
 BEGIN
     DELETE FROM Conductores WHERE id = p_id;
 END $$
+
+----------------------------------------------------------------------
+
+CREATE PROCEDURE InsertarVehiculo(IN p_id INT,IN p_placa VARCHAR(512),IN p_tipo VARCHAR(50),IN p_capacidad Decimal(10,2))
+BEGIN
+    INSERT INTO Vehiculos (id, placa, tipo, capacidad) VALUES (p_id, p_placa, p_tipo, p_capacidad);
+END $$
+
+CREATE PROCEDURE ActualizarVehiculo(IN p_id INT,IN p_placa VARCHAR(512),IN p_tipo VARCHAR(50),IN p_capacidad Decimal(10,2))
+BEGIN
+    UPDATE Vehiculos SET placa = p_placa,tipo = p_tipo,capacidad = p_capacidad WHERE id = p_id;
+END $$
+
+CREATE PROCEDURE ConsultarVehiculoPorId(IN p_id INT)
+BEGIN
+    SELECT id, placa, tipo, capacidad FROM Vehiculos WHERE id = p_id;
+END $$
+
+CREATE PROCEDURE EliminarVehiculoPorId(IN p_id INT)
+BEGIN
+    DELETE FROM Vehiculos WHERE id = p_id;
+END $$
+
+-------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 
 
 DELIMITER ;

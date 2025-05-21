@@ -3,25 +3,34 @@ CONSULTAS POR CMD PC
 TOKEN
 curl -X POST http://localhost:4041/loginJWT -H "Content-Type: application/json" -d "{\"usuario\":\"admin\",\"password\":\"admin123\"}"
 
+----------CONDUCTORES
+
 INSERT
-curl -X POST http://localhost:4041/conductor/guardar -H "Content-Type: application/json" -d "{\"id\":50,\"nombre\":\"Jorge Luis Parra\",\"cedula\":\"1003\",\"telefono\":\"301378973\"}"
 curl -X POST http://localhost:4041/conductor/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"nombre\":\"Jorge Luis Parra\",\"cedula\":\"1003\",\"telefono\":\"301378973\"}"
 
 UPDATE
-curl -X POST http://localhost:4041/conductor/actualizar -H "Content-Type: application/json" -d "{\"id\":50,\"nombre\":\"Luisa sanchez\",\"cedula\":\"1903\",\"telefono\":\"301378973\"}"
 curl -X POST http://localhost:4041/conductor/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"nombre\":\"Luisa sanchez\",\"cedula\":\"1903\",\"telefono\":\"301378973\"}"
 
-
 SELECT
-curl -X POST http://localhost:4041/conductor/consultar -H "Content-Type: application/json" -d "{\"id\":50}"
 curl -X POST http://localhost:4041/conductor/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
 
-
 DELETE 
-curl -X POST http://localhost:4041/conductor/eliminar -H "Content-Type: application/json" -d "{\"id\":50}"
 curl -X POST http://localhost:4041/conductor/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
 
 
+----------VEHICULOS
+
+INSERT
+curl -X POST http://localhost:4041/vehiculo/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"placa\":\"ABCD\",\"tipo\":\"Van\",\"capacidad\":300"}"
+
+UPDATE
+curl -X POST http://localhost:4041/vehiculo/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"placa\":\"9BC67D\",\"tipo\":\"Moto\",\"capacidad\":2"}"
+
+SELECT
+curl -X POST http://localhost:4041/vehiculo/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
+
+DELETE 
+curl -X POST http://localhost:4041/vehiculo/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
 
 
 

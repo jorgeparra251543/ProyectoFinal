@@ -2,47 +2,72 @@
 from Nucleo import Conexion
 from tabulate import tabulate
 
+from Utilidades import EncriptarAES;
+
 #Cada entidad es una clase
 class VehiculosRepositorio:
 
     #Insertar vehiculo    
     def Guardar(self, vehiculo):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""INSERT INTO vehiculos (id,tipo,placa,capacidad) VALUES ({vehiculo.getId()},'{vehiculo.getTipo()}','{vehiculo.getPlaca()}','{vehiculo.getCapacidad()}')"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Insertado")
-        return True
+        try:
+            ObjConexion = Conexion.Conexion()
+            ObjConexion.conectar()
+            consulta = f"CALL InsertarVehiculo({vehiculo.getId()},'{vehiculo.getPlaca()}','{vehiculo.getTipo()}','{vehiculo.getCapacidad()}')"""
+            ObjConexion.ejecutarNoQuery(consulta)
+            ObjConexion.desconectar()
+            print("Dato Insertado")
+            return True
+        except Exception as ex:
+            print(str(ex));
     
     #Actualizar vehiculo   
     def Actualizar(self, vehiculo):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""UPDATE vehiculos SET placa='{vehiculo.getPlaca()}',tipo='{vehiculo.getTipo()}',capacidad='{vehiculo.getCapacidad()}' Where id= {vehiculo.getId()}"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Actualizado")
-        return True
+        try:
+            ObjConexion = Conexion.Conexion()
+            ObjConexion.conectar()
+            consulta = f"CALL ActualizarVehiculo({vehiculo.getId()}, '{vehiculo.getPlaca()}', '{vehiculo.getTipo()}', '{vehiculo.getCapacidad()}');"
+            ObjConexion.ejecutarNoQuery(consulta)
+            ObjConexion.desconectar()
+            print("Dato Actualizado")
+            return True
+        except Exception as ex:
+            print(str(ex));
     
     #Eliminar vehiculo   
     def Eliminar(self, vehiculo):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""DELETE FROM Vehiculos  WHERE id={vehiculo.getId()}"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Eliminado")
-        return True
+        try:
+            ObjConexion = Conexion.Conexion()
+            ObjConexion.conectar()
+            consulta = f"CALL EliminarVehiculoPorId({vehiculo.getId()})"
+            ObjConexion.ejecutarNoQuery(consulta)
+            ObjConexion.desconectar()
+            print("Dato Eliminado")
+            return True
+        except Exception as ex:
+            print(str(ex));
     
     #Consultar vehiculo     
     def Consultar(self, vehiculo):
+        try:
+           ObjConexion = Conexion.Conexion()
+           ObjConexion.conectar()
+           consulta = f"CALL ConsultarVehiculoPorId({vehiculo.getId()})"
+           tabla=ObjConexion.ejecutarQuery(consulta)
 
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""SELECT * FROM Vehiculos  WHERE id={vehiculo.getId()}"""
-        tabla=ObjConexion.ejecutarQuery(consulta)
-        print("Dato Consultado")
-        print(tabulate(tabla, headers=["ID","Placa","Tipo","Capacidad",], tablefmt="grid"))
-        ObjConexion.desconectar()
-        return True
+           if not tabla:
+               print("No se encontraro conductor")
+               ObjConexion.desconectar()
+
+           ObjAES=EncriptarAES.EncriptarAES()
+
+           for elemento in tabla:
+               id = elemento[0]
+               placa = ObjAES.Decifrar(elemento[1])
+               tipo = elemento[2] 
+               capacidad = elemento[3] 
+               print(f"ID: {id}, Placa: {placa}, Tipo: {tipo}, Capacidad: {capacidad}")
+
+           ObjConexion.desconectar()
+           return True
+        except Exception as ex:
+            print(str(ex));
