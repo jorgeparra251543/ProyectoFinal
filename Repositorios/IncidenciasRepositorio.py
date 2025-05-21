@@ -7,42 +7,63 @@ class IncidenciasRepositorio:
 
     #Insertar inicidencia
     def Guardar(self, incidencia):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""INSERT INTO Incidencias (id,pedido_id,descripcion,fecha,resuelta) VALUES ({incidencia.getId()},'{incidencia.getPedido()}','{incidencia.getDescripcion()}','{incidencia.getFecha()}','{incidencia.getResuelta()}')"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Insertado")
-        return True
+        try:
+           ObjConexion = Conexion.Conexion()
+           ObjConexion.conectar()
+           consulta = f"CALL InsertarIncidencia({incidencia.getId()},'{incidencia.getPedido()}','{incidencia.getDescripcion()}','{incidencia.getFecha()}','{incidencia.getResuelta()}');"
+           ObjConexion.ejecutarNoQuery(consulta)
+           ObjConexion.desconectar()
+           print("Dato Insertado")
+           return True
+        except Exception as ex:
+            print(str(ex));
     
     #Actualizar incidencia
     def Actualizar(self, incidencia):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""UPDATE Incidencias SET pedido_id='{incidencia.getPedido()}',descripcion='{incidencia.getDescripcion()}',fecha='{incidencia.getFecha()}',resuelta='{incidencia.getResuelta()}' Where id= {incidencia.getId()}"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Actualizado")
-        return True
+        try:
+           ObjConexion = Conexion.Conexion()
+           ObjConexion.conectar()
+           consulta = f"CALL ActualizarIncidencia({incidencia.getId()},'{incidencia.getPedido()}','{incidencia.getDescripcion()}','{incidencia.getFecha()}','{incidencia.getResuelta()}');"
+           ObjConexion.ejecutarNoQuery(consulta)
+           ObjConexion.desconectar()
+           print("Dato Actualizado")
+           return True
+        except Exception as ex:
+            print(str(ex));
     
-    #Eliminar incidenci    
+    #Eliminar incidencia    
     def Eliminar(self, incidencia):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""DELETE FROM Incidencias WHERE id={incidencia.getId()}"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Eliminado")
-        return True
+        try:
+           ObjConexion = Conexion.Conexion()
+           ObjConexion.conectar()
+           consulta = f"CALL EliminarIncidenciPorId({incidencia.getId()});"
+           ObjConexion.ejecutarNoQuery(consulta)
+           ObjConexion.desconectar()
+           print("Dato Eliminado")
+           return True
+        except Exception as ex:
+            print(str(ex));
     
     #Consultar incicencias     
     def Consultar(self, incidencias):
+        try:
+           ObjConexion = Conexion.Conexion()
+           ObjConexion.conectar()
+           consulta = f"CALL ConsultarIncidenciaPorId({incidencias.getId()});"
+           tabla=ObjConexion.ejecutarQuery(consulta)
 
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""SELECT * FROM Incidencias  WHERE id={incidencias.getId()}"""
-        tabla=ObjConexion.ejecutarQuery(consulta)
-        print("Dato Consultado")
-        print(tabulate(tabla, headers=["ID","Pedido Id","Descripcion","Fecha","Resuelta"], tablefmt="grid"))
-        ObjConexion.desconectar()
-        return True
+           if not tabla:
+               print("No se encontraro incidencia")
+               ObjConexion.desconectar()
+
+           for elemento in tabla:
+               id = elemento[0]
+               pedidoid = elemento[1]
+               descripcion = elemento[2]
+               fecha = elemento[3]
+               resuelta = elemento[4]
+               print(f"ID: {id},PedidoId: {pedidoid} ,Descripcion: {descripcion},Fecha: {fecha},Resuelta: {resuelta}")
+           ObjConexion.desconectar()
+           return True
+        except Exception as ex:
+            print(str(ex));

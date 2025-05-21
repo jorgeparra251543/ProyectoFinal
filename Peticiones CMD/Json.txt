@@ -47,6 +47,19 @@ DELETE
 curl -X POST http://localhost:4041/tipoenvio/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
 
 
+----------INCIDENCIA
+
+INSERT
+curl -X POST http://localhost:4041/incidencia/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"pedido_id\":3,\"descripcion\":\"Pedido detenido por derrumbe\",\"fecha\":\"2025-05-21T14:30:00\",\"resuelta\":1"}"
+
+UPDATE
+curl -X POST http://localhost:4041/incidencia/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"pedido_id\":2,\"descripcion\":\"Pedido perdido\",\"fecha\":\"2025-04-20T14:30:00\",\"resuelta\":0"}"
+
+SELECT
+curl -X POST http://localhost:4041/incidencia/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
+
+DELETE 
+curl -X POST http://localhost:4041/incidencia/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
 
 
 

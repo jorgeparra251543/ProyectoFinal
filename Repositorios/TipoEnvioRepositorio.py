@@ -53,7 +53,7 @@ class TipoEnvioRepositorio:
            tabla=ObjConexion.ejecutarQuery(consulta)
 
            if not tabla:
-               print("No se encontraro conductor")
+               print("No se encontro tipo de envio")
                ObjConexion.desconectar()
 
            for elemento in tabla:

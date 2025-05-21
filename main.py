@@ -957,6 +957,128 @@ def EliminarTipoEnvio():
         return jsonify(respuesta), 500
 
 
+#API INCIDENCIAS
+
+@app.route('/incidencia/guardar', methods=["POST"])
+#@token_requerido
+def GuardarIncidencia():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if not all(dato in datos for dato in ("id","pedido_id","descripcion","fecha","resuelta")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto tipo incidencia
+        incidencia = Incidencias.Incidencias(datos["id"],datos["pedido_id"],datos["descripcion"],datos["fecha"],datos["resuelta"])
+
+        #Creo objeto para tipo incidencia
+        repositorio =  IncidenciasRepositorio.IncidenciasRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Guardar(incidencia)
+
+        respuesta["Mensaje"] = "Incidencia guardado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/incidencia/actualizar', methods=["POST"])
+#@token_requerido
+def ActualizarIncidencia():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if not all(dato in datos for dato in ("id","pedido_id","descripcion","fecha","resuelta")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto tipo incidencia
+        incidencia = Incidencias.Incidencias(datos["id"],datos["pedido_id"],datos["descripcion"],datos["fecha"],datos["resuelta"])
+
+        #Creo objeto para tipo incidencia
+        repositorio =  IncidenciasRepositorio.IncidenciasRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Actualizar(incidencia)
+
+        respuesta["Mensaje"] = "Incidencia actualizada correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/incidencia/consultar', methods=["POST"])
+#@token_requerido
+def ConsultarIncidencia():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto tipo incidencia
+        incidencia = Incidencias.Incidencias(datos["id"],0,"","0001-01-01T00:00:00",0)
+
+        #Creo objeto para tipo incidencia
+        repositorio =  IncidenciasRepositorio.IncidenciasRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Consultar(incidencia)
+
+        respuesta["Mensaje"] = "Incidencia consultada correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/incidencia/eliminar', methods=["POST"])
+#@token_requerido
+def EliminarIncidencia():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto tipo incidencia
+        incidencia = Incidencias.Incidencias(datos["id"],0,"","0001-01-01T00:00:00",0)
+
+        #Creo objeto para tipo incidencia
+        repositorio =  IncidenciasRepositorio.IncidenciasRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Eliminar(incidencia)
+
+        respuesta["Mensaje"] = "Incidencia eliminada correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+
+
+
+
 
 
 

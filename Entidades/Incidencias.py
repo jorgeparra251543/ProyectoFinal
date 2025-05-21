@@ -26,7 +26,7 @@ class Incidencias:
         return self.__pedido
 
     def setPedido(self, pedido):
-        if isinstance(pedido, str) and pedido.strip():
+        if isinstance(pedido, int):
             self.__pedido = pedido
         else:
             raise ValueError("Pedido no válido")
@@ -35,7 +35,7 @@ class Incidencias:
         return self.__descripcion
 
     def setDescripcion(self, descripcion):
-        if isinstance(descripcion, str) and descripcion.strip():
+        if isinstance(descripcion, str):
             self.__descripcion = descripcion
         else:
             raise ValueError("Descripcion no válido")
@@ -44,10 +44,17 @@ class Incidencias:
         return self.__fecha
 
     def setFecha(self, fecha):
-        if isinstance(fecha,datetime):
+        if isinstance(fecha, str):
+            try:
+                # Intenta convertir usando formato ISO 8601
+                fecha = datetime.fromisoformat(fecha)
+            except ValueError:
+                raise ValueError("Formato de fecha inválido. Usa 'YYYY-MM-DDTHH:MM:SS'")
+        
+        if isinstance(fecha, datetime):
             self.__fecha = fecha
         else:
-            raise ValueError("Fecha  no válido")
+            raise ValueError("Fecha no válida")
 
     def getResuelta(self):
         return self.__resuelta

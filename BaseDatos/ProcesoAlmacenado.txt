@@ -65,6 +65,29 @@ BEGIN
 END $$
 
 -----------------------------------------------------------------------------------
+CREATE PROCEDURE InsertarIncidencia(IN p_id INT,IN p_pedido_id INT, IN p_descripcion TEXT,IN p_fecha DATETIME,IN p_resuelta TINYINT)
+BEGIN
+    INSERT INTO incidencias (id,pedido_id,descripcion,fecha,resuelta) VALUES (p_id,p_pedido_id,p_descripcion,p_fecha,p_resuelta );
+END $$
+
+CREATE PROCEDURE ActualizarIncidencia(IN p_id INT,IN p_pedido_id INT, IN p_descripcion TEXT,IN p_fecha DATETIME,IN p_resuelta TINYINT)
+BEGIN
+    UPDATE incidencias SET pedido_id=p_pedido_id,descripcion=p_descripcion,fecha=p_fecha,resuelta=p_resuelta WHERE id = p_id;
+END $$
+
+CREATE PROCEDURE ConsultarIncidenciaPorId(IN p_id INT)
+BEGIN
+    SELECT id,pedido_id,descripcion,fecha,resuelta FROM incidencias WHERE id = p_id;
+END $$
+
+CREATE PROCEDURE EliminarIncidenciPorId(IN p_id INT)
+BEGIN
+    DELETE FROM incidencias WHERE id = p_id;
+END $$
+--------------------------------------------------------------------------------------
+
+
+
 
 
 
