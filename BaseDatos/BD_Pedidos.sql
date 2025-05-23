@@ -266,8 +266,8 @@ INSERT INTO `tipo_envio` (`id`, `nombre`) VALUES
 CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `telefono` varchar(20) DEFAULT NULL,
+  `email` varchar(512) DEFAULT NULL,
+  `telefono` varchar(512) DEFAULT NULL,
   `direccion` text DEFAULT NULL,
   `rol` enum('cliente','operador','admin') DEFAULT 'cliente',
   `fecha_registro` datetime DEFAULT current_timestamp()
