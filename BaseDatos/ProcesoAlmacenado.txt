@@ -226,3 +226,57 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+--------------------------------------------------------------------------------------
+-- Insertar seguimiento
+
+CREATE PROCEDURE InsertarSeguimiento (
+    IN p_id INT,
+    IN p_pedido_id INT,
+    IN p_estado_id INT,
+    IN p_ubicacion VARCHAR(255),
+    IN p_comentario TEXT,
+    IN p_fecha_hora DATETIME
+)
+BEGIN
+    INSERT INTO seguimiento (id, pedido_id, estado_id, ubicacion, comentario, fecha_hora)
+    VALUES (p_id, p_pedido_id, p_estado_id, p_ubicacion, p_comentario, p_fecha_hora);
+END;
+
+-- Actualizar seguimiento 
+CREATE PROCEDURE ActualizarSeguimiento (
+    IN p_id INT,
+    IN p_pedido_id INT,
+    IN p_estado_id INT,
+    IN p_ubicacion VARCHAR(255),
+    IN p_comentario TEXT,
+    IN p_fecha_hora DATETIME
+)
+BEGIN
+    UPDATE seguimiento
+    SET 
+        pedido_id = p_pedido_id,
+        estado_id = p_estado_id,
+        ubicacion = p_ubicacion,
+        comentario = p_comentario,
+        fecha_hora = p_fecha_hora
+    WHERE id = p_id;
+END;
+
+--Eliminar seguimiento
+CREATE PROCEDURE EliminarSeguimientoPorId (
+    IN p_id INT
+)
+BEGIN
+    DELETE FROM seguimiento WHERE id = p_id;
+END;
+
+--Consultar seguimiento
+
+CREATE PROCEDURE ConsultarSeguimientoPorId (
+    IN p_id INT
+)
+BEGIN
+    SELECT * FROM seguimiento WHERE id = p_id;
+END;
+
