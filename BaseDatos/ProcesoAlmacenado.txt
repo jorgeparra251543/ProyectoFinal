@@ -146,5 +146,50 @@ END $$
 
 --------------------------------------------------------------------------------------
 
+-- Insertar ciudad
+CREATE PROCEDURE InsertarCiudad(
+    IN p_id INT,
+    IN p_nombre VARCHAR(50),
+    IN p_departamento_id INT
+)
+BEGIN
+    INSERT INTO ciudades (id, nombre, departamento_id)
+    VALUES (p_id, p_nombre, p_departamento_id);
+END $$
+
+-- Actualizar ciudad
+CREATE PROCEDURE ActualizarCiudad(
+    IN p_id INT,
+    IN p_nombre VARCHAR(50),
+    IN p_departamento_id INT
+)
+BEGIN
+    UPDATE ciudades
+    SET nombre = p_nombre,
+        departamento_id = p_departamento_id
+    WHERE id = p_id;
+END $$
+
+-- Consultar ciudad por ID
+CREATE PROCEDURE ConsultarCiudadPorId(
+    IN p_id INT
+)
+BEGIN
+    SELECT id, nombre, departamento_id
+    FROM ciudades
+    WHERE id = p_id;
+END $$
+
+-- Eliminar ciudad por ID
+CREATE PROCEDURE EliminarCiudadPorId(
+    IN p_id INT
+)
+BEGIN
+    DELETE FROM ciudades
+    WHERE id = p_id;
+END $$
+
+--------------------------------------------------------------------------------------
+
 
 DELIMITER ;

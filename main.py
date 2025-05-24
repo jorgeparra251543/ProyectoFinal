@@ -1299,6 +1299,100 @@ def EliminarMetodosPago():
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
 
+#API CIUDADES
+
+@app.route('/ciudades/guardar', methods=["POST"])
+#@token_requerido
+def GuardarCiudades():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if not all(dato in datos for dato in ("id", "nombre","departamento_id")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+        
+        # Crear objeto tipo ciudad
+        ciudad = Ciudades.Ciudades(datos["id"], datos["nombre"], datos["departamento_id"])
+
+        #Creo objeto repositorio para ciudad
+        repositorio =  CiudadesRepositorio.CiudadesRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Guardar(ciudad)
+
+        respuesta["Mensaje"] = "Ciudad guardada correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/ciudades/actualizar', methods=["POST"])
+#@token_requerido
+def ActualizarCiudades():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if not all(dato in datos for dato in ("id", "nombre", "departamento_id")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+        
+        # Crear objeto tipo ciudad
+        ciudad = Ciudades.Ciudades(datos["id"], datos["nombre"], datos["departamento_id"])
+
+        #Creo objeto repositorio para ciudad
+        repositorio = CiudadesRepositorio.CiudadesRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Actualizar(ciudad)
+
+        respuesta["Mensaje"] = "Ciudad actualizada correctamente"
+        return jsonify(respuesta), 201
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/ciudades/consultar', methods=["POST"])
+#@token_requerido
+def ConsultarCiudades():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        ciudad = Ciudades.Ciudades(datos["id"], "", 0)
+        repositorio = CiudadesRepositorio.CiudadesRepositorio()
+        repositorio.Consultar(ciudad)
+
+        respuesta["Mensaje"] = "Ciudad consultada correctamente"
+        return jsonify(respuesta), 201
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/ciudades/eliminar', methods=["POST"])
+#@token_requerido
+def EliminarCiudades():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        ciudad = Ciudades.Ciudades(datos["id"], "", 0)
+        repositorio = CiudadesRepositorio.CiudadesRepositorio()
+        repositorio.Eliminar(ciudad)
+
+        respuesta["Mensaje"] = "Ciudad eliminada correctamente"
+        return jsonify(respuesta), 201
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
 
 #Llamado metodo Main
 if __name__ == "__main__":#

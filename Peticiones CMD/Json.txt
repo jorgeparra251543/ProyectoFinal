@@ -88,6 +88,22 @@ DELETE
 curl -X POST http://localhost:4041/metodos_pago/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4}"
 
 
+----------Ciudades
+
+INSERT
+curl -X POST http://localhost:4041/ciudades/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"nombre\":\"Cundinamarca\",\"departamento_id\":3}"
+
+UPDATE
+curl -X POST http://localhost:4041/ciudades/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"nombre\":\"Huila\",\"departamento_id\":3}"
+
+SELECT
+curl -X POST http://localhost:4041/ciudades/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
+
+DELETE 
+curl -X POST http://localhost:4041/ciudades/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
+
+
+
 
 
 
