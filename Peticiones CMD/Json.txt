@@ -85,7 +85,7 @@ SELECT
 curl -X POST http://localhost:4041/metodos_pago/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":1}"
 
 DELETE 
-curl -X POST http://localhost:4041/metodos_pago/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":1}"
+curl -X POST http://localhost:4041/metodos_pago/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4}"
 
 
 
