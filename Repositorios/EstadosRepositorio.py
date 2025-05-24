@@ -1,48 +1,70 @@
-#Importar clases de otras carpetas del proyecto
+# Importar clases de otras carpetas del proyecto
 from Nucleo import Conexion
 from tabulate import tabulate
+from Entidades.Estados import Estados
 
-#Cada entidad es una clase
+# Cada entidad es una clase
 class EstadosRepositorio:
 
-    #Insertar Estados
-    def Guardar(self, estados):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""INSERT INTO estados (id,nombre) VALUES ({estados.getId()},'{estados.getNombre()}')"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Insertado")
-        return True
-    
-    #Actualizar Estados
-    def Actualizar(self, estados):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""UPDATE estados SET nombre='{estados.getNombre()}' Where id= {estados.getId()}"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Actualizado")
-        return True
-    
-    #Eliminar Estados    
-    def Eliminar(self, estados):
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""DELETE FROM estados WHERE id={estados.getId()}"""
-        ObjConexion.ejecutarNoQuery(consulta)
-        ObjConexion.desconectar()
-        print("Dato Eliminado")
-        return True
-    
-    #Consultar Estados     
-    def Consultar(self, estados):
+    # Insertar Estado
+    def Guardar(self, estado: Estados):
+        try:
+            ObjConexion = Conexion.Conexion()
+            ObjConexion.conectar()
+            consulta = f"CALL InsertarEstado({estado.getId()}, '{estado.getNombre()}');"
+            ObjConexion.ejecutarNoQuery(consulta)
+            ObjConexion.desconectar()
+            print("Dato Insertado")
+            return True
+        except Exception as ex:
+            print(str(ex))
+            return False
 
-        ObjConexion = Conexion.Conexion()
-        ObjConexion.conectar()
-        consulta = f"""SELECT * FROM estados  WHERE id={estados.getId()}"""
-        tabla=ObjConexion.ejecutarQuery(consulta)
-        print("Dato Consultado")
-        print(tabulate(tabla, headers=["id","nombre"], tablefmt="grid"))
-        ObjConexion.desconectar()
-        return True
+    # Actualizar Estado
+    def Actualizar(self, estado: Estados):
+        try:
+            ObjConexion = Conexion.Conexion()
+            ObjConexion.conectar()
+            consulta = f"CALL ActualizarEstado({estado.getId()}, '{estado.getNombre()}');"
+            ObjConexion.ejecutarNoQuery(consulta)
+            ObjConexion.desconectar()
+            print("Dato Actualizado")
+            return True
+        except Exception as ex:
+            print(str(ex))
+            return False
+
+    # Eliminar Estado
+    def Eliminar(self, estado: Estados):
+        try:
+            ObjConexion = Conexion.Conexion()
+            ObjConexion.conectar()
+            consulta = f"CALL EliminarEstadoPorId({estado.getId()});"
+            ObjConexion.ejecutarNoQuery(consulta)
+            ObjConexion.desconectar()
+            print("Dato Eliminado")
+            return True
+        except Exception as ex:
+            print(str(ex))
+            return False
+
+    # Consultar Estado por ID
+    def Consultar(self, estado: Estados):
+        try:
+            ObjConexion = Conexion.Conexion()
+            ObjConexion.conectar()
+            consulta = f"CALL ConsultarEstadoPorId({estado.getId()});"
+            tabla = ObjConexion.ejecutarQuery(consulta)
+
+            if not tabla:
+                print("No se encontró estado")
+                ObjConexion.desconectar()
+                return False
+
+            print("Dato Consultado")
+            print(tabulate(tabla, headers=["id", "nombre"], tablefmt="grid"))
+            ObjConexion.desconectar()
+            return True
+        except Exception as ex:
+            print(str(ex))
+            return False

@@ -104,7 +104,19 @@ curl -X POST http://localhost:4041/ciudades/eliminar -H "Content-Type: applicati
 
 
 
+----------Estados
 
+INSERT
+curl -X POST http://localhost:4041/estados/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4,\"nombre\":\"sin completar\"}"
+
+UPDATE
+curl -X POST http://localhost:4041/estados/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4,\"nombre\":\"Inactivo\"}"
+
+SELECT
+curl -X POST http://localhost:4041/estados/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4}"
+
+DELETE
+curl -X POST http://localhost:4041/estados/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":10}"
 
 
 

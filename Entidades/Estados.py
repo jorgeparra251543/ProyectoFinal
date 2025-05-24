@@ -16,7 +16,7 @@ class Estados:
         return self.__nombre
 
     def setNombre(self, nombre):
-        if isinstance(nombre, str) and nombre.strip():
+        if isinstance(nombre, str):
             self.__nombre = nombre
         else:
             raise ValueError("Nombre no válido")

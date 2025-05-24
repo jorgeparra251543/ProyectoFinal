@@ -190,7 +190,6 @@ BEGIN
 END $$
 
 --------------------------------------------------------------------------------------
-DELIMITER $$
 
 -- Insertar estado
 CREATE PROCEDURE InsertarEstado(
@@ -225,12 +224,5 @@ CREATE PROCEDURE EliminarEstadoPorId(
 BEGIN
     DELETE FROM estados WHERE id = p_id;
 END $$
-
-DELIMITER ;
-
---------------------------------------------------------------------------------------
-
-
-
 
 DELIMITER ;

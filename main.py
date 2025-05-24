@@ -1485,6 +1485,34 @@ def EliminarEstados():
     except Exception as e:
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
+@app.route('/estados/consultar', methods=["POST"])
+# @token_requerido  # Descomenta si usas autenticación
+def ConsultarEstados():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto Estado con solo el ID
+        estado = Estados.Estados(datos["id"], "")
+
+        # Crear repositorio
+        repositorio = EstadosRepositorio.EstadosRepositorio()
+
+        # Consultar estado
+        resultado = repositorio.Consultar(estado)
+
+        if not resultado:
+            return jsonify({"Mensaje": "No se encontró el estado"}), 404
+
+        respuesta["Mensaje"] = "Consulta realizada correctamente"
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
 
 
 #Llamado metodo Main
