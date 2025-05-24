@@ -857,7 +857,7 @@ def GuardarTipoEnvio():
         # Crear objeto tipo envio
         tipoEnvio = Tipo_Envio.Tipo_Envio(datos["id"],datos["nombre"])
 
-        #Creo objeto para tipo envio
+        #Creo objeto repositorio para tipo envio
         repositorio =  TipoEnvioRepositorio.TipoEnvioRepositorio()
 
         # Guardar en la base de datos usando el repositorio
@@ -1230,7 +1230,7 @@ def ActualizarMetodosPago():
         #Creo objeto para metodos pago
         repositorio =  MetodosPagoRepositorio.MetodosPagoRepositorio()
 
-        # Guardar en la base de datos usando el repositorio
+        #Actualizar en la base de datos usando el repositorio
         repositorio.Actualizar(metodopago)
 
         respuesta["Mensaje"] = "Metodos Pago actualizado correctamente"
@@ -1260,7 +1260,7 @@ def ConsultarMetodosPago():
         #Creo objeto para metodo pago
         repositorio =  MetodosPagoRepositorio.MetodosPagoRepositorio()
 
-        # Guardar en la base de datos usando el repositorio
+        #Consultar en la base de datos usando el repositorio
         repositorio.Consultar(metodopago)
 
         respuesta["Mensaje"] = "metodo de pago consultado correctamente"
@@ -1289,7 +1289,7 @@ def EliminarMetodosPago():
         #Creo objeto para tipo envio
         repositorio =  MetodosPagoRepositorio.MetodosPagoRepositorio()
 
-        # Guardar en la base de datos usando el repositorio
+        #Eliminar en la base de datos usando el repositorio
         repositorio.Eliminar(metodopago)
 
         respuesta["Mensaje"] = "Metodo Pago eliminado correctamente"
@@ -1320,7 +1320,7 @@ def GuardarCiudades():
         #Creo objeto repositorio para ciudad
         repositorio =  CiudadesRepositorio.CiudadesRepositorio()
 
-        # Guardar en la base de datos usando el repositorio
+        #Guardar en la base de datos usando el repositorio
         repositorio.Guardar(ciudad)
 
         respuesta["Mensaje"] = "Ciudad guardada correctamente"
@@ -1347,7 +1347,7 @@ def ActualizarCiudades():
         #Creo objeto repositorio para ciudad
         repositorio = CiudadesRepositorio.CiudadesRepositorio()
 
-        # Guardar en la base de datos usando el repositorio
+        #Actualizar en la base de datos usando el repositorio
         repositorio.Actualizar(ciudad)
 
         respuesta["Mensaje"] = "Ciudad actualizada correctamente"
@@ -1362,11 +1362,18 @@ def ConsultarCiudades():
     respuesta = {}
     try:
         datos = request.get_json()
+    
+    # Validaciones básicas para saber si estan todos los datos para realizar el insert
         if "id" not in datos:
             return jsonify({"Error": "Faltan datos obligatorios"}), 400
-
+        
+        # Crear objeto tipo ciudad
         ciudad = Ciudades.Ciudades(datos["id"], "", 0)
+
+        #Creo objeto repositorio para ciudad
         repositorio = CiudadesRepositorio.CiudadesRepositorio()
+        
+        #Consultar en la base de datos usando el repositorio
         repositorio.Consultar(ciudad)
 
         respuesta["Mensaje"] = "Ciudad consultada correctamente"
@@ -1381,11 +1388,18 @@ def EliminarCiudades():
     respuesta = {}
     try:
         datos = request.get_json()
+        
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
         if "id" not in datos:
             return jsonify({"Error": "Faltan datos obligatorios"}), 400
-
+        
+        # Crear objeto tipo ciudad
         ciudad = Ciudades.Ciudades(datos["id"], "", 0)
+        
+        #Creo objeto repositorio para ciudad
         repositorio = CiudadesRepositorio.CiudadesRepositorio()
+
+        #Eliminar en la base de datos usando el repositorio
         repositorio.Eliminar(ciudad)
 
         respuesta["Mensaje"] = "Ciudad eliminada correctamente"
@@ -1393,6 +1407,85 @@ def EliminarCiudades():
     except Exception as e:
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
+    
+#API ESTADOS
+@app.route('/estados/guardar', methods=["POST"])
+#@token_requerido
+def GuardarEstados():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+        
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if not all(dato in datos for dato in ("id", "nombre")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+        
+        # Crear objeto tipo ciudad
+        estado = Estados.Estados(datos["id"], datos["nombre"])
+        
+        #Creo objeto repositorio para ciudad
+        repositorio = EstadosRepositorio.EstadosRepositorio()
+
+        #Guardar en la base de datos usando el repositorio
+        repositorio.Guardar(estado)
+
+        respuesta["Mensaje"] = "Estado guardado correctamente"
+        return jsonify(respuesta), 201
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/estados/actualizar', methods=["POST"])
+#@token_requerido
+def ActualizarEstados():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+        
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if not all(dato in datos for dato in ("id", "nombre")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+        
+        #Crear objeto tipo ciudad
+        estado = Estados.Estados(datos["id"], datos["nombre"])
+        
+        #Creo objeto repositorio para ciudad
+        repositorio = EstadosRepositorio.EstadosRepositorio()
+
+        #Actualizar en la base de datos usando el repositorio
+        repositorio.Actualizar(estado)
+
+        respuesta["Mensaje"] = "Estado actualizado correctamente"
+        return jsonify(respuesta), 201
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/estados/eliminar', methods=["POST"])
+#@token_requerido
+def EliminarEstados():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+        
+        #Crear objeto tipo ciudad
+        estado = Estados.Estados(datos["id"], "")
+
+        #Creo objeto repositorio para ciudad
+        repositorio = EstadosRepositorio.EstadosRepositorio()
+
+        #Eliminar en la base de datos usando el repositorio
+        repositorio.Eliminar(estado)
+
+        respuesta["Mensaje"] = "Estado eliminado correctamente"
+        return jsonify(respuesta), 201
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
 
 #Llamado metodo Main
 if __name__ == "__main__":#

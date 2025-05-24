@@ -190,6 +190,47 @@ BEGIN
 END $$
 
 --------------------------------------------------------------------------------------
+DELIMITER $$
+
+-- Insertar estado
+CREATE PROCEDURE InsertarEstado(
+    IN p_id INT,
+    IN p_nombre VARCHAR(50)
+)
+BEGIN
+    INSERT INTO estados (id, nombre) VALUES (p_id, p_nombre);
+END $$
+
+-- Actualizar estado
+CREATE PROCEDURE ActualizarEstado(
+    IN p_id INT,
+    IN p_nombre VARCHAR(50)
+)
+BEGIN
+    UPDATE estados SET nombre = p_nombre WHERE id = p_id;
+END $$
+
+-- Consultar estado por ID
+CREATE PROCEDURE ConsultarEstadoPorId(
+    IN p_id INT
+)
+BEGIN
+    SELECT id, nombre FROM estados WHERE id = p_id;
+END $$
+
+-- Eliminar estado por ID
+CREATE PROCEDURE EliminarEstadoPorId(
+    IN p_id INT
+)
+BEGIN
+    DELETE FROM estados WHERE id = p_id;
+END $$
+
+DELIMITER ;
+
+--------------------------------------------------------------------------------------
+
+
 
 
 DELIMITER ;
