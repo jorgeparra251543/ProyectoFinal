@@ -18,6 +18,7 @@ from Entidades import Rutas
 from Entidades import Zonas
 from Entidades import Departamento
 
+
 from Repositorios import ConductoresRepositorio
 from Repositorios import VehiculosRepositorio
 from Repositorios import TipoEnvioRepositorio
@@ -1173,6 +1174,125 @@ def ConsultarUsuario():
         repositorio.Consultar(usuario)
 
         respuesta["Mensaje"] = "Usuario consultado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+#API METODOS PAGO
+
+@app.route('/metodos_pago/guardar', methods=["POST"])
+#@token_requerido
+def GuardarMetodosPago():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if not all(dato in datos for dato in ("id", "nombre")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+        
+        # Crear objeto tipo metodos pago
+        metodopago = MetodosPago.MetodosPago(datos["id"],datos["nombre"])
+
+        #Creo objeto para tipo metodos pago
+        repositorio =  MetodosPagoRepositorio.MetodosPagoRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Guardar(metodopago)
+
+        respuesta["Mensaje"] = "Metodo de pago guardado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/metodos_pago/actualizar', methods=["POST"])
+#@token_requerido
+def ActualizarMetodosPago():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el actualizar
+        if not all(dato in datos for dato in ("id","nombre")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto metodos pago
+        metodopago = MetodosPago.MetodosPago(datos["id"],datos["nombre"])     
+
+        #Creo objeto para metodos pago
+        repositorio =  MetodosPagoRepositorio.MetodosPagoRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Actualizar(metodopago)
+
+        respuesta["Mensaje"] = "Metodos Pago actualizado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/metodos_pago/consultar', methods=["POST"])
+#@token_requerido
+def ConsultarMetodosPago():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el actualizar
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto tipo metodo pago
+        metodopago = MetodosPago.MetodosPago(datos["id"],"")     
+
+
+        #Creo objeto para metodo pago
+        repositorio =  MetodosPagoRepositorio.MetodosPagoRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Consultar(metodopago)
+
+        respuesta["Mensaje"] = "metodo de pago consultado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+    
+@app.route('/metodos_pago/eliminar', methods=["POST"])
+#@token_requerido
+def EliminarMetodosPago():
+    
+    respuesta = {}    
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el eleminar
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto tipo envio
+        metodopago = MetodosPago.MetodosPago(datos["id"]," ")
+
+        #Creo objeto para tipo envio
+        repositorio =  MetodosPagoRepositorio.MetodosPagoRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Eliminar(metodopago)
+
+        respuesta["Mensaje"] = "Metodo Pago eliminado correctamente"
         return jsonify(respuesta), 201
 
     except Exception as e:

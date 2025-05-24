@@ -73,6 +73,19 @@ curl -X POST http://localhost:4041/usuarios/actualizar -H "Content-Type: applica
 SELECT
 curl -X POST http://localhost:4041/usuarios/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
 
+----------METODOS pago
+
+INSERT
+curl -X POST http://localhost:4041/metodos_pago/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"nombre\":\"Contraentrega\"}"
+
+UPDATE
+curl -X POST http://localhost:4041/metodos_pago/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":1,\"nombre\":\"fectivo\"}"
+
+SELECT
+curl -X POST http://localhost:4041/metodos_pago/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":1}"
+
+DELETE 
+curl -X POST http://localhost:4041/metodos_pago/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":1}"
 
 
 

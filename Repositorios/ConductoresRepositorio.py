@@ -55,7 +55,7 @@ class ConductoresRepositorio:
            tabla = ObjConexion.ejecutarQuery(consulta)
 
            if not tabla:
-               print("No se encontraro conductor")
+               print("No se encontro conductor")
                ObjConexion.desconectar()
 
            ObjAES=EncriptarAES.EncriptarAES()
