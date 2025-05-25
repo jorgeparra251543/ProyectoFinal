@@ -407,8 +407,51 @@ BEGIN
 END $$
 
 
+--------------------------------------------------------
+CREATE PROCEDURE InsertarRuta(
+    IN p_id INT,
+    IN p_ciudad_origen_id INT,
+    IN p_ciudad_destino_id INT,
+    IN p_zona_id INT
+)
+BEGIN
+    INSERT INTO rutas (
+        id, ciudad_origen_id, ciudad_destino_id, zona_id
+    )
+    VALUES (
+        p_id, p_ciudad_origen_id, p_ciudad_destino_id, p_zona_id
+    );
+END $$
 
-DELIMITER ;
+CREATE PROCEDURE ActualizarRuta(
+    IN p_id INT,
+    IN p_ciudad_origen_id INT,
+    IN p_ciudad_destino_id INT,
+    IN p_zona_id INT
+)
+BEGIN
+    UPDATE rutas SET 
+        ciudad_origen_id = p_ciudad_origen_id,
+        ciudad_destino_id = p_ciudad_destino_id,
+        zona_id = p_zona_id
+    WHERE id = p_id;
+END $$
 
+CREATE PROCEDURE ConsultarRutaPorId(
+    IN p_id INT
+)
+BEGIN
+    SELECT 
+        id, ciudad_origen_id, ciudad_destino_id, zona_id
+    FROM rutas
+    WHERE id = p_id;
+END $$
+
+CREATE PROCEDURE EliminarRutaPorId(
+    IN p_id INT
+)
+BEGIN
+    DELETE FROM rutas WHERE id = p_id;
+END $$
 
 DELIMITER ;

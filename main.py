@@ -1799,9 +1799,6 @@ def ConsultarSeguimiento():
       
 #API PEDIDOS
 
-
-
-
 @app.route('/pedido/guardar', methods=["POST"])
 # @token_requerido
 def GuardarPedido():
@@ -1820,7 +1817,7 @@ def GuardarPedido():
         if not all(campo in datos for campo in campos_obligatorios):
             return jsonify({"Error": "Faltan datos obligatorios"}), 400
 
-        # ✅ Convertir fecha de string a datetime
+        #  Convertir fecha de string a datetime
         try:
             fecha_creacion = datetime.strptime(datos["fecha_creacion"], "%Y-%m-%d %H:%M:%S")
         except ValueError:
@@ -1978,6 +1975,115 @@ def EliminarPedido():
     except Exception as e:
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
+
+
+# API RUTAS 
+@app.route('/ruta/guardar', methods=["POST"])
+#@token_requerido
+def GuardarRuta():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+        campos_obligatorios = ("id", "ciudad_origen_id", "ciudad_destino_id", "zona_id")
+
+        if not all(campo in datos for campo in campos_obligatorios):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        ruta = Rutas.Ruta(
+            datos["id"],
+            datos["ciudad_origen_id"],
+            datos["ciudad_destino_id"],
+            datos["zona_id"]
+        )
+
+        repositorio = RutasRepositorio.RutasRepositorio()
+        repositorio.Guardar(ruta)
+
+        respuesta["Mensaje"] = "Ruta guardada correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/ruta/actualizar', methods=["POST"])
+#@token_requerido
+def ActualizarRuta():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+        campos_obligatorios = ("id", "ciudad_origen_id", "ciudad_destino_id", "zona_id")
+
+        if not all(campo in datos for campo in campos_obligatorios):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        ruta = Rutas.Ruta(
+            datos["id"],
+            datos["ciudad_origen_id"],
+            datos["ciudad_destino_id"],
+            datos["zona_id"]
+        )
+
+        repositorio = RutasRepositorio.RutasRepositorio()
+        repositorio.Actualizar(ruta)
+
+        respuesta["Mensaje"] = "Ruta actualizada correctamente"
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/ruta/eliminar', methods=["POST"])
+def EliminarRuta():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        repositorio = RutasRepositorio.RutasRepositorio()
+        repositorio.Eliminar(str(datos["id"]))
+
+        respuesta["Mensaje"] = "Ruta eliminado correctamente"
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/ruta/consultar', methods=['POST'])
+def consultar_ruta():
+    try:
+        datos = request.get_json()
+
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        repositorio = RutasRepositorio.RutasRepositorio()
+        resultado = repositorio.Consultar(str(datos["id"]))
+
+        if not resultado:
+            return jsonify({"Error": "Ruta no encontrada"}), 404
+
+        fila = resultado[0]  # Suponiendo que devuelve una lista de tuplas
+
+        respuesta = {
+            "id": fila[0],
+            "ciudad_origen_id": fila[1],
+            "ciudad_destino_id": fila[2],
+            "zona_id": fila[3],
+            "mensaje": "Ruta consultada correctamente"
+        }
+
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 500
+
+
+
 
 #Llamado metodo Main
 if __name__ == "__main__":#

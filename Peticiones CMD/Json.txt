@@ -169,6 +169,12 @@ DELETE
 curl -X POST http://localhost:4041/pedido/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":1}"
 
 
+------------------------------------------RUTAS
 
+curl -X POST http://localhost:4041/ruta/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4,\"ciudad_origen_id\":1,\"ciudad_destino_id\":2,\"zona_id\":1}"
 
+curl -X POST http://localhost:4041/ruta/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4,\"ciudad_origen_id\":2,\"ciudad_destino_id\":2,\"zona_id\":1}"
 
+curl -X POST http://localhost:4041/ruta/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4}"
+
+curl -X POST http://localhost:4041/ruta/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4}"
