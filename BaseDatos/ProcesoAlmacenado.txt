@@ -86,12 +86,12 @@ BEGIN
 END $$
 --------------------------------------------------------------------------------------
 
-CREATE PROCEDURE InsertarUsuarios(IN p_id INT,IN p_nombre VARCHAR(100), IN p_email VARCHAR(100),IN p_telefono VARCHAR(20),IN p_direccion TEXT, IN p_rol VARCHAR(20), IN p_fecharegistro DATETIME)
+CREATE PROCEDURE InsertarUsuarios(IN p_id INT,IN p_nombre VARCHAR(100), IN p_email VARCHAR(512),IN p_telefono VARCHAR(512),IN p_direccion VARCHAR(512), IN p_rol VARCHAR(20), IN p_fecharegistro DATETIME)
 BEGIN
     INSERT INTO usuarios (id,nombre,email,telefono,direccion,rol,fecha_registro) VALUES (p_id,p_nombre,p_email,p_telefono,p_direccion,p_rol,p_fecharegistro );
 END $$
 
-CREATE PROCEDURE ActualizarUsuarios(IN p_id INT,IN p_nombre VARCHAR(100), IN p_email VARCHAR(100),IN p_telefono VARCHAR(20),IN p_direccion TEXT, IN p_rol VARCHAR(20), IN p_fecharegistro DATETIME)
+CREATE PROCEDURE ActualizarUsuarios(IN p_id INT,IN p_nombre VARCHAR(100),  IN p_email VARCHAR(512),IN p_telefono VARCHAR(512),IN p_direccion VARCHAR(512), IN p_rol VARCHAR(20), IN p_fecharegistro DATETIME)
 BEGIN
     UPDATE usuarios SET nombre=p_nombre,email=p_email,telefono=p_telefono,direccion=p_direccion,rol=p_rol,fecha_registro=p_fecharegistro WHERE id = p_id;
 END $$

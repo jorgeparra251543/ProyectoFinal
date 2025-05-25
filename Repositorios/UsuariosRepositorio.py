@@ -2,6 +2,7 @@
 from Nucleo import Conexion
 from tabulate import tabulate
 from Utilidades import EncriptarAES
+from Entidades.Usuarios import Usuarios  # Asegúrate de que esta clase exista y tenga getters
 
 #Cada entidad es una clase
 class UsuariosRepositorio:
@@ -33,11 +34,11 @@ class UsuariosRepositorio:
             print(str(ex));
     
     #Eliminar usuarios     
-    def Eliminar(self, usuario):
+    def Eliminar(self, usuario:Usuarios):
         try:
            ObjConexion = Conexion.Conexion()
            ObjConexion.conectar()
-           consulta = f"CALL EliminarUsuariosPorId({usuario.getId()}');"
+           consulta = f"CALL EliminarUsuariosPorId({usuario.getId()});"
            ObjConexion.ejecutarNoQuery(consulta)
            ObjConexion.desconectar()
            print("Dato Eliminado")

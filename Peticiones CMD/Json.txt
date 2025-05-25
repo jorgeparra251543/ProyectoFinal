@@ -65,13 +65,16 @@ curl -X POST http://localhost:4041/incidencia/eliminar -H "Content-Type: applica
 ----------USUARIOS
 
 INSERT
-curl -X POST http://localhost:4041/usuarios/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"nombre\":\"Jorge Luis \",\"email\":\"Jorge@gmail.com \",\"telefono\":\"301378973\",\"direccion\":\"calle 39 \",\"rol\":\"admin\",\"fecha_registro\":\"2025-05-21T14:30:00\"}"
+curl -X POST http://localhost:4041/usuarios/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":11,\"nombre\":\"mayra\",\"email\":\"Jorge@gmail.com \",\"telefono\":\"301378973\",\"direccion\":\"calle 39 \",\"rol\":\"admin\",\"fecha_registro\":\"2025-05-21T14:30:00\"}"
 
 UPDATE
-curl -X POST http://localhost:4041/usuarios/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"nombre\":\"Jorge Antonio \",\"email\":\"Jorge122@gmail.com \",\"telefono\":\"301378973\",\"direccion\":\"carrera 39 \",\"rol\":\"admin\",\"fecha_registro\":\"2025-05-21T14:30:00\"}"
+curl -X POST http://localhost:4041/usuarios/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":11,\"nombre\":\"Jorge\",\"email\":\"Jorge@gmail.com \",\"telefono\":\"301378973\",\"direccion\":\"calle 39 \",\"rol\":\"admin\",\"fecha_registro\":\"2025-05-21T14:30:00\"}"
 
 SELECT
-curl -X POST http://localhost:4041/usuarios/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50}"
+curl -X POST http://localhost:4041/usuarios/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":11}"
+
+DELETE
+curl -X POST http://localhost:4041/usuarios/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxOTQ2NDl9.8FVt_FrIIBOCY1ONdy01otKQ8yJMb5BipCYsVcmObkg" -d "{\"id\":11}"
 
 ----------METODOS pago
 
