@@ -2229,6 +2229,36 @@ def EliminarDepartamento():
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500    
 
+
+@app.route('/departamento/consultar', methods=['POST'])
+#@token_requerido
+def consultarDepartamento():
+
+    try:
+        datos = request.get_json()
+
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        repositorio = DepartamentoRepositorio.DepartamentosRepositorio()
+        resultado = repositorio.Consultar(str(datos["id"]))
+
+        if not resultado:
+            return jsonify({"Error": "Departamento no encontrada"}), 404
+
+        fila = resultado[0]  # Suponiendo que devuelve una lista de tuplas
+
+        respuesta = {
+            "id": fila[0],
+            "nombre": fila[1],
+            "mensaje": "Departamento consultada correctamente"
+        }
+
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 500  
+
 #Llamado metodo Main
 if __name__ == "__main__":#
     app.run('localhost', 4041);
