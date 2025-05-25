@@ -225,58 +225,62 @@ BEGIN
     DELETE FROM estados WHERE id = p_id;
 END $$
 
-DELIMITER ;
-
 --------------------------------------------------------------------------------------
--- Insertar seguimiento
-
-CREATE PROCEDURE InsertarSeguimiento (
+-- Insertar pago
+CREATE PROCEDURE InsertarPago (
     IN p_id INT,
     IN p_pedido_id INT,
-    IN p_estado_id INT,
-    IN p_ubicacion VARCHAR(255),
-    IN p_comentario TEXT,
-    IN p_fecha_hora DATETIME
+    IN p_metodo_pago_id INT,
+    IN p_valor VARCHAR(512),
+    IN p_fecha_pago DATETIME,
+    IN p_estado_pago ENUM('pendiente','pagado','fallido')
 )
 BEGIN
-    INSERT INTO seguimiento (id, pedido_id, estado_id, ubicacion, comentario, fecha_hora)
-    VALUES (p_id, p_pedido_id, p_estado_id, p_ubicacion, p_comentario, p_fecha_hora);
-END;
+    INSERT INTO pagos (id, pedido_id, metodo_pago_id, valor, fecha_pago, estado_pago)
+    VALUES (p_id, p_pedido_id, p_metodo_pago_id, p_valor, p_fecha_pago, p_estado_pago);
+END$$
 
--- Actualizar seguimiento 
-CREATE PROCEDURE ActualizarSeguimiento (
+
+
+-- Actualizar pago
+CREATE PROCEDURE ActualizarPago (
     IN p_id INT,
     IN p_pedido_id INT,
-    IN p_estado_id INT,
-    IN p_ubicacion VARCHAR(255),
-    IN p_comentario TEXT,
-    IN p_fecha_hora DATETIME
+    IN p_metodo_pago_id INT,
+    IN p_valor VARCHAR(512),
+    IN p_fecha_pago DATETIME,
+    IN p_estado_pago ENUM('pendiente','pagado','fallido')
 )
 BEGIN
-    UPDATE seguimiento
-    SET 
-        pedido_id = p_pedido_id,
-        estado_id = p_estado_id,
-        ubicacion = p_ubicacion,
-        comentario = p_comentario,
-        fecha_hora = p_fecha_hora
+    UPDATE pagos
+    SET pedido_id = p_pedido_id,
+        metodo_pago_id = p_metodo_pago_id,
+        valor = p_valor,
+        fecha_pago = p_fecha_pago,
+        estado_pago = p_estado_pago
     WHERE id = p_id;
-END;
+END$$
 
---Eliminar seguimiento
-CREATE PROCEDURE EliminarSeguimientoPorId (
+-- Eliminar pago 
+
+CREATE PROCEDURE EliminarPagoPorId (
     IN p_id INT
 )
 BEGIN
-    DELETE FROM seguimiento WHERE id = p_id;
-END;
+    DELETE FROM pagos WHERE id = p_id;
+END$$
 
---Consultar seguimiento
 
-CREATE PROCEDURE ConsultarSeguimientoPorId (
+-- Consultar pago
+
+CREATE PROCEDURE ConsultarPagoPorId (
     IN p_id INT
 )
 BEGIN
-    SELECT * FROM seguimiento WHERE id = p_id;
-END;
+    SELECT * FROM pagos WHERE id = p_id;
+END$$
 
+
+
+
+DELIMITER ;

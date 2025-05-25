@@ -147,7 +147,7 @@ CREATE TABLE `pagos` (
   `id` int(11) NOT NULL,
   `pedido_id` int(11) DEFAULT NULL,
   `metodo_pago_id` int(11) DEFAULT NULL,
-  `valor` decimal(10,2) DEFAULT NULL,
+  `valor` varchar(512) DEFAULT NULL,
   `fecha_pago` datetime DEFAULT current_timestamp(),
   `estado_pago` enum('pendiente','pagado','fallido') DEFAULT 'pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -157,9 +157,9 @@ CREATE TABLE `pagos` (
 --
 
 INSERT INTO `pagos` (`id`, `pedido_id`, `metodo_pago_id`, `valor`, `fecha_pago`, `estado_pago`) VALUES
-(1, 1, 1, 150000.00, '2025-04-08 06:57:30', 'pagado'),
-(2, 2, 2, 250000.00, '2025-04-08 06:57:30', 'pendiente'),
-(3, 3, 3, 350000.00, '2025-04-08 06:57:30', 'pagado');
+(1, 1, 1, '150000.00', '2025-04-08 06:57:30', 'pagado'),
+(2, 2, 2, '250000.00', '2025-04-08 06:57:30', 'pendiente'),
+(3, 3, 3, '350000.00', '2025-04-08 06:57:30', 'pagado');
 
 -- --------------------------------------------------------
 
@@ -224,18 +224,14 @@ CREATE TABLE `seguimiento` (
   `pedido_id` int(11) NOT NULL,
   `estado_id` int(11) NOT NULL,
   `ubicacion` varchar(255) DEFAULT NULL,
-  `comentario` text DEFAULT NULL,
-  `fecha_hora` datetime DEFAULT current_timestamp()
+  `comentario` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
 -- Volcado de datos para la tabla `seguimiento`
---
-
-INSERT INTO `seguimiento` (`id`, `pedido_id`, `estado_id`, `ubicacion`, `comentario`, `fecha_hora`) VALUES
-(1, 1, 1, 'Bodega Medellín', 'Pedido empaquetado', '2025-04-08 06:57:30'),
-(2, 2, 2, 'En tránsito hacia Bogotá', 'Retraso por tráfico', '2025-04-08 06:57:30'),
-(3, 3, 3, 'Entregado', 'Sin inconvenientes', '2025-04-08 06:57:30');
+INSERT INTO `seguimiento` (`id`, `pedido_id`, `estado_id`, `ubicacion`, `comentario`) VALUES
+(1, 1, 1, 'Bodega Medellín', 'Pedido empaquetado'),
+(2, 2, 2, 'En tránsito hacia Bogotá', 'Retraso por tráfico'),
+(3, 3, 3, 'Entregado', 'Sin inconvenientes');
 
 -- --------------------------------------------------------
 
@@ -570,4 +566,3 @@ ALTER TABLE `seguimiento`
   ADD CONSTRAINT `seguimiento_ibfk_1` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`),
   ADD CONSTRAINT `seguimiento_ibfk_2` FOREIGN KEY (`estado_id`) REFERENCES `estados` (`id`);
 COMMIT;
-

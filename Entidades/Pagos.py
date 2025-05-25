@@ -45,10 +45,11 @@ class Pagos:
         return self.__valor
 
     def setValor(self, valor):
-        if isinstance(valor, (int, float)):
+        if isinstance(valor, str):
             self.__valor = valor
         else:
             raise ValueError("Valor no válido")
+
 
     def getFechaPago(self):
         return self.__fecha_pago

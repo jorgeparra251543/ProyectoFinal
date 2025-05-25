@@ -88,7 +88,7 @@ DELETE
 curl -X POST http://localhost:4041/metodos_pago/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4}"
 
 
-----------Ciudades
+----------CIUDADES
 
 INSERT
 curl -X POST http://localhost:4041/ciudades/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":50,\"nombre\":\"Cundinamarca\",\"departamento_id\":3}"
@@ -104,7 +104,7 @@ curl -X POST http://localhost:4041/ciudades/eliminar -H "Content-Type: applicati
 
 
 
-----------Estados
+----------ESTADOS
 
 INSERT
 curl -X POST http://localhost:4041/estados/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4,\"nombre\":\"sin completar\"}"
@@ -116,8 +116,26 @@ SELECT
 curl -X POST http://localhost:4041/estados/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4}"
 
 DELETE
-curl -X POST http://localhost:4041/estados/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":10}"
+curl -X POST http://localhost:4041/estados/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4}"
 
+
+
+
+
+----------PAGOS
+
+INSERT
+curl -X POST http://localhost:4041/pagos/guardar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxNTI4NTN9.XN2glM-z1Wdg-lleeOmqp17-Q4VRnY3DAdKVlpIpl2M" -d "{\"id\":5,\"pedido_id\":1,\"metodo_pago_id\":1,\"valor\":\"50000.00\",\"fecha_pago\":\"2025-05-26 05:00:00\",\"estado_pago\":\"pendiente\"}"
+
+
+UPDATE
+curl -X POST http://localhost:4041/pagos/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxNTY3Mjd9.zxMm4qhlVLmv1FoOrpwL4ZQxSU81AKxjefVuC3ekrgU" -d "{\"id\":5,\"pedido_id\":1,\"metodo_pago_id\":4,\"valor\":\"50000.00\",\"fecha_pago\":\"2025-05-26 12:05:00\",\"estado_pago\":\"pendiente\"}"
+
+SELECT
+curl -X POST http://localhost:4041/pagos/consultar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxNTI4NTN9.XN2glM-z1Wdg-lleeOmqp17-Q4VRnY3DAdKVlpIpl2M" -d "{\"id\":5}"
+
+DELETE
+curl -X POST http://localhost:4041/pagos/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxNTI4NTN9.XN2glM-z1Wdg-lleeOmqp17-Q4VRnY3DAdKVlpIpl2M" -d "{\"id\":1}"
 
 
 

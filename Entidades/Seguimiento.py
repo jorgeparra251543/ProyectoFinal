@@ -1,13 +1,12 @@
 from datetime import datetime
 
 class Seguimiento:
-    def __init__(self, id, idpedido, estadoid, ubicacion, comentario, fechahora):
+    def __init__(self, id, idpedido, estadoid, ubicacion, comentario):
         self.setId(id)
         self.setIdPedido(idpedido)
         self.setEstadoId(estadoid)
         self.setUbicacion(ubicacion)
         self.setComentario(comentario)
-        self.setFechaHora(fechahora)
 
     def getId(self):
         return self.__id
@@ -41,7 +40,7 @@ class Seguimiento:
         return self.__ubicacion
 
     def setUbicacion(self, ubicacion):
-        if isinstance(ubicacion, str) and ubicacion.strip():
+        if isinstance(ubicacion, str):
             self.__ubicacion = ubicacion
         else:
             raise ValueError("ubicación no válida")
@@ -50,16 +49,8 @@ class Seguimiento:
         return self.__comentario
 
     def setComentario(self, comentario):
-        if isinstance(comentario, str) and comentario.strip():
+        if isinstance(comentario, str):
             self.__comentario = comentario
         else:
             raise ValueError("comentario no válido")
         
-    def getFechaHora(self):
-        return self.__fechahora
-
-    def setFechaHora(self, fechahora):
-        if isinstance(fechahora, datetime):
-            self.__fechahora = fechahora
-        else:
-            raise ValueError("fecha_hora no válida")

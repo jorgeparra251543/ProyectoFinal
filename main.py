@@ -249,8 +249,8 @@ def main():
    #--METODO DE PAGO
 
    #Inicializacion de datos
-   id = 1
-   nombre = "Tarjeta de debito"
+   #id = 1
+   #nombre = "Tarjeta de debito"
 
    #Insertar
    #Creo Objeto metodo de pago
@@ -287,12 +287,12 @@ def main():
    #--PAGOS
 
    #Inicializacion de datos
-   id = 3
-   pedido_id = 3
-   metodo_pago_id= 3
-   valor = 350000.00
-   fecha_pago = datetime(2025, 4, 8, 6, 57)
-   estado_pago = "pagado"
+   #id = 3
+   #pedido_id = 3
+   #metodo_pago_id= 3
+   #valor = 350000.00
+   #fecha_pago = datetime(2025, 4, 8, 6, 57)
+   #estado_pago = "pagado"
 
    #Insertar
    #Creo Objeto pago
@@ -1486,7 +1486,7 @@ def EliminarEstados():
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
 @app.route('/estados/consultar', methods=["POST"])
-# @token_requerido  # Descomenta si usas autenticación
+# @token_requerido  
 def ConsultarEstados():
     respuesta = {}
     try:
@@ -1508,6 +1508,142 @@ def ConsultarEstados():
             return jsonify({"Mensaje": "No se encontró el estado"}), 404
 
         respuesta["Mensaje"] = "Consulta realizada correctamente"
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+#API PAGOs
+@app.route('/pagos/guardar', methods=["POST"])
+@token_requerido
+def GuardarPago():
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas
+        if not all(dato in datos for dato in ("id", "pedido_id", "metodo_pago_id", "valor", "fecha_pago", "estado_pago")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto de tipo datetime
+        fecha_pago = datetime.strptime(datos["fecha_pago"], "%Y-%m-%d %H:%M:%S")
+
+        # Crear objeto pago
+        pago = Pagos.Pagos(
+            datos["id"],
+            datos["pedido_id"],
+            datos["metodo_pago_id"],
+            datos["valor"],
+            fecha_pago,
+            datos["estado_pago"]
+        )
+        #Creo el objeto para encriptar y desencriptar
+        ObjAES=EncriptarAES.EncriptarAES()
+
+        # Usar repositorio
+        repositorio = PagosRepositorio.PagosRepositorio()
+
+        #Encripto los datos sensibles de pago
+        pago.setValor(ObjAES.Cifrar(pago.getValor()))
+
+        
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Guardar(pago)
+        respuesta["Mensaje"] = "Pago guardado correctamente"
+        return jsonify(respuesta), 201
+        
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/pagos/actualizar', methods=["POST"])
+@token_requerido
+def ActualizarPago():
+    try:
+        datos = request.get_json()
+        if not all(k in datos for k in ("id", "pedido_id", "metodo_pago_id", "valor", "fecha_pago", "estado_pago")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        fecha_pago = datetime.strptime(datos["fecha_pago"], "%Y-%m-%d %H:%M:%S")
+        pago = Pagos.Pagos(datos["id"], datos["pedido_id"], datos["metodo_pago_id"], datos["valor"], fecha_pago, datos["estado_pago"])
+
+        # Encriptar valor antes de actualizar
+        ObjAES = EncriptarAES.EncriptarAES()
+        pago.setValor(ObjAES.Cifrar(pago.getValor()))
+
+        repositorio = PagosRepositorio.PagosRepositorio()
+        exito = repositorio.Actualizar(pago)
+
+        if not exito:
+            return jsonify({"Error": "Error al actualizar pago"}), 500
+
+        return jsonify({"mensaje": "Pago actualizado correctamente"}), 200
+
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 500
+    
+@app.route('/pagos/consultar', methods=["POST"])
+@token_requerido
+def ConsultarPago():
+    try:
+        datos = request.get_json()
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        pago = Pagos.Pagos(datos["id"], 0, 0, "0", datetime.now(), "pendiente")
+        repositorio = PagosRepositorio.PagosRepositorio()
+        resultado = repositorio.Consultar(pago)
+
+        if not resultado:
+            return jsonify({"Error": "Pago no encontrado"}), 404
+
+        fila = resultado[0]
+        ObjAES = EncriptarAES.EncriptarAES()
+
+        # Debug: imprime antes y después
+        print("Valor encriptado:", fila[3])
+        desencriptado = ObjAES.Decifrar(fila[3])
+        print("Valor desencriptado:", desencriptado)
+
+        respuesta = {
+            "id": fila[0],
+            "pedido_id": fila[1],
+            "metodo_pago_id": fila[2],
+            "valor": desencriptado,
+            "fecha_pago": str(fila[4]),
+            "estado_pago": fila[5],
+            "mensaje": "Pago consultado correctamente"
+        }
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 500
+
+
+
+@app.route('/pagos/eliminar', methods=["POST"])
+@token_requerido
+
+def EliminarPago():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto pago
+        pago = Pagos.Pagos(datos["id"], 0, 0,"0", datetime.now(), "pendiente")  
+
+        #Creo objeto repositorio
+        repositorio = PagosRepositorio.PagosRepositorio()
+        
+        # Consultar en la base de datos usando el repositorio
+        repositorio.Eliminar(pago)
+
+        respuesta["Mensaje"] = "Pago eliminado correctamente"
         return jsonify(respuesta), 200
 
     except Exception as e:
