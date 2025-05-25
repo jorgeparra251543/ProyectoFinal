@@ -2083,6 +2083,41 @@ def consultar_ruta():
         return jsonify({"Error": str(e)}), 500
 
 
+#API ZONAS
+
+@app.route('/zona/guardar', methods=["POST"])
+def GuardarZona():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+        if "id" not in datos or "nombre" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        zona = Zonas.Zona(datos["id"], datos["nombre"])
+        repositorio = ZonasRepositorio.ZonasRepositorio()
+        repositorio.Guardar(zona)
+        respuesta["Mensaje"] = "Zona guardada correctamente"
+        return jsonify(respuesta), 201
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/zona/actualizar', methods=["POST"])
+def ActualizarZona():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+        if "id" not in datos or "nombre" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        zona = Zonas.Zona(datos["id"], datos["nombre"])
+        repositorio = ZonasRepositorio.ZonasRepositorio()
+        repositorio.Actualizar(zona)
+        respuesta["Mensaje"] = "Zona actualizada correctamente"
+        return jsonify(respuesta), 200
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
 
 
 #Llamado metodo Main

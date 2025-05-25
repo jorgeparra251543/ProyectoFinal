@@ -454,4 +454,53 @@ BEGIN
     DELETE FROM rutas WHERE id = p_id;
 END $$
 
+---------------------------------
+
+
+
+-- Insertar zona
+CREATE PROCEDURE InsertarZona(
+    IN p_id INT,
+    IN p_nombre VARCHAR(100)
+)
+BEGIN
+    INSERT INTO zonas (
+        id, nombre
+    )
+    VALUES (
+        p_id, p_nombre
+    );
+END $$
+
+-- Actualizar zona
+CREATE PROCEDURE ActualizarZona(
+    IN p_id INT,
+    IN p_nombre VARCHAR(100)
+)
+BEGIN
+    UPDATE zonas SET 
+        nombre = p_nombre
+    WHERE id = p_id;
+END $$
+
+-- Consultar zona por ID
+CREATE PROCEDURE ConsultarZonaPorId(
+    IN p_id INT
+)
+BEGIN
+    SELECT 
+        id, nombre
+    FROM zonas
+    WHERE id = p_id;
+END $$
+
+-- Eliminar zona por ID
+CREATE PROCEDURE EliminarZonaPorId(
+    IN p_id INT
+)
+BEGIN
+    DELETE FROM zonas WHERE id = p_id;
+END $$
+
+
 DELIMITER ;
