@@ -2203,12 +2203,31 @@ def ActualizarDepartamento():
         depa = Departamento.Departamento(datos["id"], datos["nombre"])
         repositorio = DepartamentoRepositorio.DepartamentosRepositorio()
         repositorio.Actualizar(depa)
-        respuesta["Mensaje"] = "departamento actualizada correctamente"
+        respuesta["Mensaje"] = "Departamento actualizada correctamente"
         return jsonify(respuesta), 200
     except Exception as e:
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
-    
+
+@app.route('/departamento/eliminar', methods=["POST"])
+#@token_requerido
+def EliminarDepartamento():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        repositorio = DepartamentoRepositorio.DepartamentosRepositorio()
+        repositorio.Eliminar(str(datos["id"]))
+
+        respuesta["Mensaje"] = "Departamento eliminado correctamente"
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500    
 
 #Llamado metodo Main
 if __name__ == "__main__":#
