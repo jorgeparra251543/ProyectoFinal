@@ -2191,6 +2191,25 @@ def GuardarDepartamento():
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
 
+@app.route('/departamento/actualizar', methods=["POST"])
+#@token_requerido
+def ActualizarDepartamento():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+        if "id" not in datos or "nombre" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        depa = Departamento.Departamento(datos["id"], datos["nombre"])
+        repositorio = DepartamentoRepositorio.DepartamentosRepositorio()
+        repositorio.Actualizar(depa)
+        respuesta["Mensaje"] = "departamento actualizada correctamente"
+        return jsonify(respuesta), 200
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+
 #Llamado metodo Main
 if __name__ == "__main__":#
     app.run('localhost', 4041);
