@@ -1,20 +1,34 @@
 from datetime import datetime
 
 class Pedido:
-    def __init__(self, id, codigo, usuario_id, destinatario, direccion_entrega, ciudad_id,
-                 ruta_id, vehiculo_id, conductor_id, tipo_envio_id, estado_actual, fecha_creacion):
+    def __init__(self, id, codigo=None, usuario_id=None, destinatario=None,
+                 direccion_entrega=None, ciudad_id=None, ruta_id=None, vehiculo_id=None,
+                 conductor_id=None, tipo_envio_id=None, estado_actual=None, fecha_creacion=None):
+
         self.setId(id)
-        self.setCodigo(codigo)
-        self.setUsuarioId(usuario_id)
-        self.setDestinatario(destinatario)
-        self.setDireccionEntrega(direccion_entrega)
-        self.setCiudadId(ciudad_id)
-        self.setRutaId(ruta_id)
-        self.setVehiculoId(vehiculo_id)
-        self.setConductorId(conductor_id)
-        self.setTipoEnvioId(tipo_envio_id)
-        self.setEstadoActual(estado_actual)
-        self.setFechaCreacion(fecha_creacion)
+
+        if codigo is not None:
+            self.setCodigo(codigo)
+        if usuario_id is not None:
+            self.setUsuarioId(usuario_id)
+        if destinatario is not None:
+            self.setDestinatario(destinatario)
+        if direccion_entrega is not None:
+            self.setDireccionEntrega(direccion_entrega)
+        if ciudad_id is not None:
+            self.setCiudadId(ciudad_id)
+        if ruta_id is not None:
+            self.setRutaId(ruta_id)
+        if vehiculo_id is not None:
+            self.setVehiculoId(vehiculo_id)
+        if conductor_id is not None:
+            self.setConductorId(conductor_id)
+        if tipo_envio_id is not None:
+            self.setTipoEnvioId(tipo_envio_id)
+        if estado_actual is not None:
+            self.setEstadoActual(estado_actual)
+        if fecha_creacion is not None:
+            self.setFechaCreacion(fecha_creacion)
 
     def setId(self, id):
         if isinstance(id, int):
@@ -116,11 +130,10 @@ class Pedido:
         return self.__estado_actual
 
     def setFechaCreacion(self, fecha_creacion):
-        if isinstance(fecha_creacion,datetime):
+        if isinstance(fecha_creacion, datetime):
             self.__fecha_creacion = fecha_creacion
         else:
             raise ValueError("Fecha de creación no válida")
 
     def getFechaCreacion(self):
         return self.__fecha_creacion
-

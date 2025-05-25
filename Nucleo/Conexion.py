@@ -10,7 +10,7 @@ class Conexion:
     def __init__(self):
 
         #Cadena de conexion 
-        self.__CadenaConexion = "Driver={MySQL ODBC 9.3 Unicode Driver};Server=localhost;Database=enviobd;PORT=3306;user=user_python;password=Pass2025**"  
+        self.__CadenaConexion = "Driver={MySQL ODBC 9.2 Unicode Driver};Server=localhost;Database=enviobd;PORT=3306;user=user_python;password=Pass2025**"  
         self.__Conexion = pyodbc.connect(self.__CadenaConexion)
         self.__ObjCursor = self.__Conexion.cursor()
 

@@ -154,7 +154,19 @@ curl -X POST http://localhost:4041/seguimiento/consultar -H "Content-Type: appli
 DELETE
 curl -X POST http://localhost:4041/seguimiento/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxODYzMzN9.DYu4lAXARtva-h-2cu-ETpNDd9DAXvusxtDB003Yp1o" -d "{\"id\":3}"
 
+------------------------------------- PEDIDOS
 
+INSERT
+curl -X POST http://localhost:4041/pedido/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":5,\"codigo\":\"PED005\",\"usuario_id\":1,\"destinatario\":\"Carlos Pérez\",\"direccion_entrega\":\"Cra 45 #23-56\",\"ciudad_id\":1,\"ruta_id\":2,\"vehiculo_id\":2,\"conductor_id\":3,\"tipo_envio_id\":1,\"estado_actual\":1,\"fecha_creacion\":\"2025-05-25 10:15:00\"}"
+
+UPDATE
+curl -X POST http://localhost:4041/pedido/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":101,\"codigo\":\"PED004\",\"usuario_id\":2,\"destinatario\":\"Carlos Pérez\",\"direccion_entrega\":\"Cra 46 #23-56\",\"ciudad_id\":2,\"ruta_id\":2,\"vehiculo_id\":2,\"conductor_id\":3,\"tipo_envio_id\":1,\"estado_actual\":1,\"fecha_creacion\":\"2025-05-25 10:15:00\"}"
+
+SELECT
+curl -X POST http://localhost:4041/pedido/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":101}"
+
+DELETE
+curl -X POST http://localhost:4041/pedido/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":1}"
 
 
 

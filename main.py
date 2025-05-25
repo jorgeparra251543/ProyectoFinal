@@ -1797,7 +1797,187 @@ def ConsultarSeguimiento():
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500   
       
+#API PEDIDOS
 
+
+
+
+@app.route('/pedido/guardar', methods=["POST"])
+# @token_requerido
+def GuardarPedido():
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones de campos obligatorios
+        campos_obligatorios = (
+            "id", "codigo", "usuario_id", "destinatario", "direccion_entrega",
+            "ciudad_id", "ruta_id", "vehiculo_id", "conductor_id",
+            "tipo_envio_id", "estado_actual", "fecha_creacion"
+        )
+
+        if not all(campo in datos for campo in campos_obligatorios):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # ✅ Convertir fecha de string a datetime
+        try:
+            fecha_creacion = datetime.strptime(datos["fecha_creacion"], "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            return jsonify({"Error": "Formato de fecha_creacion inválido. Usa 'YYYY-MM-DD HH:MM:SS'"}), 400
+
+        # Crear objeto pedido con fecha ya convertida
+        pedido = Pedido.Pedido(
+            datos["id"], datos["codigo"], datos["usuario_id"], datos["destinatario"],
+            datos["direccion_entrega"], datos["ciudad_id"], datos["ruta_id"],
+            datos["vehiculo_id"], datos["conductor_id"], datos["tipo_envio_id"],
+            datos["estado_actual"], fecha_creacion  
+        )
+
+        # Instancia para cifrado
+        ObjAES = EncriptarAES.EncriptarAES()
+
+        # Cifrado de campos sensibles
+        pedido.setDestinatario(ObjAES.Cifrar(pedido.getDestinatario()))
+        pedido.setDireccionEntrega(ObjAES.Cifrar(pedido.getDireccionEntrega()))
+
+        # Guardar en la BD usando el repositorio
+        repositorio = PedidosRepositorio.PedidosRepositorio()
+        repositorio.Guardar(pedido)
+
+        respuesta["Mensaje"] = "Pedido guardado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/pedido/actualizar', methods=["POST"])
+#@token_requerido
+def ActualizarPedido():
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validación de campos requeridos
+        campos_requeridos = [
+            "id", "codigo", "usuario_id", "destinatario", "direccion_entrega",
+            "ciudad_id", "ruta_id", "vehiculo_id", "conductor_id",
+            "tipo_envio_id", "estado_actual", "fecha_creacion"
+        ]
+        
+        if not all(campo in datos for campo in campos_requeridos):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Conversión de fecha
+        try:
+            fecha_creacion = datetime.strptime(datos["fecha_creacion"], "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            return jsonify({"Error": "Formato de fecha no válido. Usa 'YYYY-MM-DD HH:MM:SS'"}), 400
+
+        # Crear objeto Pedido
+        pedido = Pedido.Pedido(
+                datos["id"], datos["codigo"], datos["usuario_id"], datos["destinatario"],
+                datos["direccion_entrega"], datos["ciudad_id"], datos["ruta_id"],
+                datos["vehiculo_id"], datos["conductor_id"], datos["tipo_envio_id"],
+                datos["estado_actual"], fecha_creacion  
+            )
+        
+        # Instancia para cifrado
+        ObjAES = EncriptarAES.EncriptarAES()
+
+        # Cifrado de campos sensibles
+        pedido.setDestinatario(ObjAES.Cifrar(pedido.getDestinatario()))
+        pedido.setDireccionEntrega(ObjAES.Cifrar(pedido.getDireccionEntrega()))
+
+        repositorio = PedidosRepositorio.PedidosRepositorio()
+        repositorio.Actualizar(pedido)
+
+        if repositorio:
+            respuesta["Mensaje"] = "Pedido actualizado correctamente"
+            return jsonify(respuesta), 201
+        else:
+            return jsonify({"Error": "Error al actualizar el pedido"}), 500
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/pedido/consultar', methods=["POST"])
+#@token_requerido
+def ConsultarPedido():
+    try:
+        datos = request.get_json()
+
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+    
+        repositorio = PedidosRepositorio.PedidosRepositorio()
+        resultado = repositorio.Consultar(str(datos["id"]))
+
+
+        if not resultado:
+            return jsonify({"Error": "Pedido no encontrado"}), 404
+
+        fila = resultado[0]
+
+        ObjAES = EncriptarAES.EncriptarAES()
+
+    
+        # Debug: imprime antes y después
+        print("Valor encriptado:", fila[3])
+        desencriptado = ObjAES.Decifrar(fila[3])
+        print("Valor desencriptado:", desencriptado)
+        print("Valor encriptado:", fila[4])
+        direccion_entrega = ObjAES.Decifrar(fila[4])
+        print("Valor desencriptado:", direccion_entrega)
+
+        
+
+        respuesta = {
+            "id": fila[0],
+            "codigo": fila[1],
+            "usuario_id": fila[2],
+
+            "destinatario": desencriptado,
+            "direccion_entrega": direccion_entrega,
+            "ciudad_id": fila[5],
+            "ruta_id": fila[6],
+            "vehiculo_id": fila[7],
+            "conductor_id": fila[8],
+            "tipo_envio_id": fila[9],
+            "estado_actual": fila[10],
+            "fecha_creacion": str(fila[11]),
+            "mensaje": "Pedido consultado correctamente"
+        }
+
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 500
+
+@app.route('/pedido/eliminar', methods=["POST"])
+#@token_requerido
+def EliminarPedido():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+    
+        repositorio = PedidosRepositorio.PedidosRepositorio()
+        repositorio.Eliminar(str(datos["id"]))
+
+        respuesta["Mensaje"] = "Pedido eliminado correctamente"
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
 
 #Llamado metodo Main
 if __name__ == "__main__":#
