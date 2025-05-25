@@ -280,6 +280,56 @@ BEGIN
     SELECT * FROM pagos WHERE id = p_id;
 END$$
 
+--------------------------------------------------------------------------------------
+
+--  Insertar seguimiento
+
+CREATE PROCEDURE insertar_seguimiento (
+    IN p_id INT,
+    IN p_pedido_id INT,
+    IN p_estado_id INT,
+    IN p_ubicacion VARCHAR(255),
+    IN p_comentario TEXT
+)
+BEGIN
+    INSERT INTO seguimiento (id, pedido_id, estado_id, ubicacion, comentario)
+    VALUES (p_id, p_pedido_id, p_estado_id, p_ubicacion, p_comentario);
+END$$
+
+--  Actualizar seguimiento
+CREATE PROCEDURE actualizar_seguimiento (
+    IN p_id INT,
+    IN p_pedido_id INT,
+    IN p_estado_id INT,
+    IN p_ubicacion VARCHAR(255),
+    IN p_comentario TEXT
+)
+BEGIN
+    UPDATE seguimiento
+    SET pedido_id = p_pedido_id,
+        estado_id = p_estado_id,
+        ubicacion = p_ubicacion,
+        comentario = p_comentario
+    WHERE id = p_id;
+END$$
+
+-- Eliminar seguimiento
+
+CREATE PROCEDURE eliminar_seguimiento (
+    IN p_id INT
+)
+BEGIN
+    DELETE FROM seguimiento WHERE id = p_id;
+END$$
+
+-- Consultar seguimiento
+
+CREATE PROCEDURE consultar_seguimiento (
+    IN p_id INT
+)
+BEGIN
+    SELECT * FROM seguimiento WHERE id = p_id;
+END$$
 
 
 

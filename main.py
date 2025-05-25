@@ -12,6 +12,7 @@ from Entidades import MetodosPago
 from Entidades import Pagos
 from Entidades import Ciudades
 from Entidades import Seguimiento
+
 from Entidades import Estados
 from Entidades import Pedido
 from Entidades import Rutas
@@ -1514,7 +1515,7 @@ def ConsultarEstados():
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
 
-#API PAGOs
+#API PAGOS
 @app.route('/pagos/guardar', methods=["POST"])
 @token_requerido
 def GuardarPago():
@@ -1649,6 +1650,125 @@ def EliminarPago():
     except Exception as e:
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
+
+
+# API SEGUIMIENTO
+
+# Ruta para guardar un nuevo seguimiento
+@app.route('/seguimiento/guardar', methods=["POST"])
+# @token_requerido
+def GuardarSeguimiento():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+
+        # Validación de campos obligatorios
+        if not all(dato in datos for dato in ("id", "pedido_id", "estado_id", "ubicacion", "comentario")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto de tipo Seguimiento con los datos recibidos
+        seguimientos = Seguimiento.Seguimiento(datos["id"], datos["pedido_id"], datos["estado_id"], datos["ubicacion"], datos["comentario"])
+
+        # Crear repositorio y guardar en la base de datos
+        repositorio = SeguimientoRepositorio.SeguimientoRepositorio()
+        repositorio.Guardar(seguimientos)
+
+        respuesta["Mensaje"] = "Seguimiento guardado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+
+# Ruta para actualizar un seguimiento existente
+@app.route('/seguimiento/actualizar', methods=["POST"])
+# @token_requerido
+def ActualizarSeguimiento():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+
+        # Validación de campos obligatorios
+        if not all(dato in datos for dato in ("id", "pedido_id", "estado_id", "ubicacion", "comentario")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto con los datos actualizados
+        seguimiento = Seguimiento.Seguimiento(
+            datos["id"],
+            datos["pedido_id"],
+            datos["estado_id"],
+            datos["ubicacion"],
+            datos["comentario"]
+        )
+
+        # Crear repositorio y actualizar en base de datos
+        repositorio = SeguimientoRepositorio.SeguimientoRepositorio()
+        repositorio.Actualizar(seguimiento)
+
+        respuesta["Mensaje"] = "Seguimiento actualizado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+
+# Ruta para eliminar un seguimiento por ID
+@app.route('/seguimiento/eliminar', methods=["POST"])
+# @token_requerido
+def EliminarSeguimiento():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+
+        # Validar que venga el ID
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto seguimiento con solo el ID
+        seguimiento = Seguimiento.Seguimiento(datos["id"], 0, 0, "", "")
+
+        # Crear repositorio y eliminar de la base de datos
+        repositorio = SeguimientoRepositorio.SeguimientoRepositorio()
+        repositorio.Eliminar(seguimiento)
+
+        respuesta["Mensaje"] = "Seguimiento eliminado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+
+@app.route("/seguimiento/consultar", methods=["POST"])
+# @token_requerido  # Descomenta si estás usando autenticación
+def ConsultarSeguimiento():
+        
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+     # Crear objeto seguimiento
+        seguimientos = Seguimiento.Seguimiento(datos["id"],0,0,"","")     
+
+
+        #Creo objeto repositorio
+        repositorio =  SeguimientoRepositorio.SeguimientoRepositorio()
+
+        #Consultar en la base de datos usando el repositorio
+        repositorio.Consultar(seguimientos)
+
+        respuesta["Mensaje"] = "seguimiento consultado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500   
+      
 
 
 #Llamado metodo Main

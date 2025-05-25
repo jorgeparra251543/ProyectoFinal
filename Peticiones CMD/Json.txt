@@ -125,17 +125,32 @@ curl -X POST http://localhost:4041/estados/eliminar -H "Content-Type: applicatio
 ----------PAGOS
 
 INSERT
-curl -X POST http://localhost:4041/pagos/guardar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxNTI4NTN9.XN2glM-z1Wdg-lleeOmqp17-Q4VRnY3DAdKVlpIpl2M" -d "{\"id\":5,\"pedido_id\":1,\"metodo_pago_id\":1,\"valor\":\"50000.00\",\"fecha_pago\":\"2025-05-26 05:00:00\",\"estado_pago\":\"pendiente\"}"
+curl -X POST http://localhost:4041/pagos/guardar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxODYzMzN9.DYu4lAXARtva-h-2cu-ETpNDd9DAXvusxtDB003Yp1o" -d "{\"id\":6,\"pedido_id\":1,\"metodo_pago_id\":1,\"valor\":\"50000.00\",\"fecha_pago\":\"2025-05-26 05:00:00\",\"estado_pago\":\"pendiente\"}"
 
 
 UPDATE
-curl -X POST http://localhost:4041/pagos/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxNTY3Mjd9.zxMm4qhlVLmv1FoOrpwL4ZQxSU81AKxjefVuC3ekrgU" -d "{\"id\":5,\"pedido_id\":1,\"metodo_pago_id\":4,\"valor\":\"50000.00\",\"fecha_pago\":\"2025-05-26 12:05:00\",\"estado_pago\":\"pendiente\"}"
+curl -X POST http://localhost:4041/pagos/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxODYzMzN9.DYu4lAXARtva-h-2cu-ETpNDd9DAXvusxtDB003Yp1o" -d "{\"id\":6,\"pedido_id\":1,\"metodo_pago_id\":1,\"valor\":\"500011\",\"fecha_pago\":\"2025-05-20 05:00:00\",\"estado_pago\":\"pendiente\"}"
 
 SELECT
-curl -X POST http://localhost:4041/pagos/consultar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxNTI4NTN9.XN2glM-z1Wdg-lleeOmqp17-Q4VRnY3DAdKVlpIpl2M" -d "{\"id\":5}"
+curl -X POST http://localhost:4041/pagos/consultar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxODYzMzN9.DYu4lAXARtva-h-2cu-ETpNDd9DAXvusxtDB003Yp1o" -d "{\"id\":5}"
 
 DELETE
-curl -X POST http://localhost:4041/pagos/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxNTI4NTN9.XN2glM-z1Wdg-lleeOmqp17-Q4VRnY3DAdKVlpIpl2M" -d "{\"id\":1}"
+curl -X POST http://localhost:4041/pagos/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxODYzMzN9.DYu4lAXARtva-h-2cu-ETpNDd9DAXvusxtDB003Yp1o" -d "{\"id\":6}"
+
+----------SEGUIMIENTO
+
+INSERT
+curl -X POST http://localhost:4041/seguimiento/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4,\"pedido_id\":3,\"estado_id\":3,\"ubicacion\":\"Centro de distribución Cali\",\"comentario\":\"Preparando envío\"}"
+
+UPDATE
+curl -X POST http://localhost:4041/seguimiento/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4,\"pedido_id\":3,\"estado_id\":3,\"ubicacion\":\"Centro de distribución med\",\"comentario\":\"Preparando envío\"}"
+
+SELECT
+curl -X POST http://localhost:4041/seguimiento/consultar -H "Content-Type: application/json" -H "Authorization: Bearer tokeno" -d "{\"id\":2}"
+
+DELETE
+curl -X POST http://localhost:4041/seguimiento/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJleHAiOjE3NDgxODYzMzN9.DYu4lAXARtva-h-2cu-ETpNDd9DAXvusxtDB003Yp1o" -d "{\"id\":3}"
+
 
 
 
