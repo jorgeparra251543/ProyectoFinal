@@ -2035,6 +2035,7 @@ def ActualizarRuta():
         return jsonify(respuesta), 500
 
 @app.route('/ruta/eliminar', methods=["POST"])
+#@token_requerido
 def EliminarRuta():
     respuesta = {}
     try:
@@ -2054,6 +2055,7 @@ def EliminarRuta():
         return jsonify(respuesta), 500
 
 @app.route('/ruta/consultar', methods=['POST'])
+#@token_requerido
 def consultar_ruta():
     try:
         datos = request.get_json()
@@ -2086,6 +2088,7 @@ def consultar_ruta():
 #API ZONAS
 
 @app.route('/zona/guardar', methods=["POST"])
+#@token_requerido
 def GuardarZona():
     respuesta = {}
     try:
@@ -2103,6 +2106,7 @@ def GuardarZona():
         return jsonify(respuesta), 500
 
 @app.route('/zona/actualizar', methods=["POST"])
+#@token_requerido
 def ActualizarZona():
     respuesta = {}
     try:
@@ -2118,6 +2122,56 @@ def ActualizarZona():
     except Exception as e:
         respuesta["Error"] = str(e)
         return jsonify(respuesta), 500
+
+@app.route('/zona/eliminar', methods=["POST"])
+#@token_requerido
+def EliminarZona():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        repositorio = ZonasRepositorio.ZonasRepositorio()
+        repositorio.Eliminar(str(datos["id"]))
+
+        respuesta["Mensaje"] = "Ruta eliminado correctamente"
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/zona/consultar', methods=['POST'])
+#@token_requerido
+def consultarZona():
+
+    try:
+        datos = request.get_json()
+
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        repositorio = ZonasRepositorio.ZonasRepositorio()
+        resultado = repositorio.Consultar(str(datos["id"]))
+
+        if not resultado:
+            return jsonify({"Error": "Ruta no encontrada"}), 404
+
+        fila = resultado[0]  # Suponiendo que devuelve una lista de tuplas
+
+        respuesta = {
+            "id": fila[0],
+            "nombre": fila[1],
+            "mensaje": "Ruta consultada correctamente"
+        }
+
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 500  
+
 
 
 #Llamado metodo Main

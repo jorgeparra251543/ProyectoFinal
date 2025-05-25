@@ -185,3 +185,7 @@ curl -X POST http://localhost:4041/ruta/eliminar -H "Content-Type: application/j
 curl -X POST http://localhost:4041/zona/guardar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":1,\"nombre\":\"Zona Norte\"}"
 
 curl -X POST http://localhost:4041/zona/actualizar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":1,\"nombre\":\"Zona Norteña\"}"
+
+curl -X POST http://localhost:4041/zona/consultar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":4}"
+
+curl -X POST http://localhost:4041/zona/eliminar -H "Content-Type: application/json" -H "Authorization: Bearer token" -d "{\"id\":5}"
