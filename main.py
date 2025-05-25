@@ -2172,7 +2172,24 @@ def consultarZona():
     except Exception as e:
         return jsonify({"Error": str(e)}), 500  
 
+#API DEPARTAMENTOS
+@app.route('/departamento/guardar', methods=["POST"])
+#@token_requerido
+def GuardarDepartamento():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+        if "id" not in datos or "nombre" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
 
+        depa = Departamento.Departamento(datos["id"], datos["nombre"])
+        repositorio = DepartamentoRepositorio.DepartamentosRepositorio()
+        repositorio.Guardar(depa)
+        respuesta["Mensaje"] = "Departamento guardada correctamente"
+        return jsonify(respuesta), 201
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
 
 #Llamado metodo Main
 if __name__ == "__main__":#

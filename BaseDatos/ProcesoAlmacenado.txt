@@ -502,5 +502,51 @@ BEGIN
     DELETE FROM zonas WHERE id = p_id;
 END $$
 
+-------------------------------------------------
+-- Insertar zona
+CREATE PROCEDURE InsertarDepartamento(
+    IN p_id INT,
+    IN p_nombre VARCHAR(100)
+)
+BEGIN
+    INSERT INTO departamentos (
+        id, nombre
+    )
+    VALUES (
+        p_id, p_nombre
+    );
+END $$
+
+-- Actualizar zona
+CREATE PROCEDURE ActualizarDepartamento(
+    IN p_id INT,
+    IN p_nombre VARCHAR(100)
+)
+BEGIN
+    UPDATE departamentos SET 
+        nombre = p_nombre
+    WHERE id = p_id;
+END $$
+
+-- Consultar zona por ID
+CREATE PROCEDURE ConsultarDepartamentoPorId(
+    IN p_id INT
+)
+BEGIN
+    SELECT 
+        id, nombre
+    FROM departamentos
+    WHERE id = p_id;
+END $$
+
+-- Eliminar zona por ID
+CREATE PROCEDURE EliminarDepartamentoPorId(
+    IN p_id INT
+)
+BEGIN
+    DELETE FROM departamentos WHERE id = p_id;
+END $$
+
+
 
 DELIMITER ;
