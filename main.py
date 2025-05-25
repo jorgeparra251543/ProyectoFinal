@@ -1077,6 +1077,137 @@ def EliminarIncidencia():
 
 #API USUARIOS
 
+@app.route('/usuarios/guardar', methods=["POST"])
+#@token_requerido
+def GuardarUsuario():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el insert
+        if not all(dato in datos for dato in ("id","nombre","email","telefono","direccion","rol","fecha_registro")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+        
+        # Crear objeto tipo usuario
+        usuario = Usuarios.Usuarios(datos["id"],datos["nombre"],datos["email"],datos["telefono"],datos["direccion"],datos["rol"],datos["fecha_registro"])
+
+        #Creo el objeto para encriptar y desencriptar
+        ObjAES=EncriptarAES.EncriptarAES()
+
+        #Encripto los datos sensibles del usuario
+        usuario.setEmail(ObjAES.Cifrar(usuario.getEmail()))
+        usuario.setTelefono(ObjAES.Cifrar(usuario.getTelefono()))
+        usuario.setDireccion(ObjAES.Cifrar(usuario.getDireccion()))
+
+
+        #Creo objeto para tipo usuario
+        repositorio =  UsuariosRepositorio.UsuariosRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Guardar(usuario)
+
+        respuesta["Mensaje"] = "Usuario guardado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/usuarios/actualizar', methods=["POST"])
+#@token_requerido
+def ActualizarUsuario():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el actualizar
+        if not all(dato in datos for dato in ("id","nombre","email","telefono","direccion","rol","fecha_registro")):
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto tipo usuario
+        usuario = Usuarios.Usuarios(datos["id"],datos["nombre"],datos["email"],datos["telefono"],datos["direccion"],datos["rol"],datos["fecha_registro"])
+
+        #Creo el objeto para encriptar y desencriptar
+        ObjAES=EncriptarAES.EncriptarAES()
+
+        #Encripto los datos sensibles del usuario
+        usuario.setEmail(ObjAES.Cifrar(usuario.getEmail()))
+        usuario.setTelefono(ObjAES.Cifrar(usuario.getTelefono()))
+        usuario.setDireccion(ObjAES.Cifrar(usuario.getDireccion()))
+
+        #Creo objeto para tipo usuario
+        repositorio =  UsuariosRepositorio.UsuariosRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Actualizar(usuario)
+
+        respuesta["Mensaje"] = "Usuario actualizado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+    
+@app.route('/usuarios/consultar', methods=["POST"])
+#@token_requerido
+def ConsultarUsuario():
+    
+    respuesta = {}
+
+    try:
+        datos = request.get_json()
+
+        # Validaciones básicas para saber si estan todos los datos para realizar el actualizar
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto tipo usuario
+        usuario = Usuarios.Usuarios(datos["id"],"","","","","","0001-01-01T00:00:00")
+
+        #Creo objeto para tipo usuario
+        repositorio =  UsuariosRepositorio.UsuariosRepositorio()
+
+        # Guardar en la base de datos usando el repositorio
+        repositorio.Consultar(usuario)
+
+        respuesta["Mensaje"] = "Usuario consultado correctamente"
+        return jsonify(respuesta), 201
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+
+@app.route('/usuarios/eliminar', methods=["POST"])
+@token_requerido
+
+def EliminarUsuario():
+    respuesta = {}
+    try:
+        datos = request.get_json()
+
+        if "id" not in datos:
+            return jsonify({"Error": "Faltan datos obligatorios"}), 400
+
+        # Crear objeto pago
+        usuario = Usuarios.Usuarios(datos["id"],"","","","","", datetime.now())  
+
+        #Creo objeto repositorio
+        repositorio = UsuariosRepositorio.UsuariosRepositorio()
+        
+        # Consultar en la base de datos usando el repositorio
+        repositorio.Eliminar(usuario)
+
+        respuesta["Mensaje"] = "usuario eliminado correctamente"
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        respuesta["Error"] = str(e)
+        return jsonify(respuesta), 500
+      
 
 #API METODOS PAGO
 
